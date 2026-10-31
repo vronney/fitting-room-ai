@@ -150,15 +150,16 @@ let lastResult=null;
 async function tryOn(){
   const garments=S.items.filter(i=>i.on).map(i=>({data:i.data,mime:i.mime})); if(!S.person||!garments.length) return;
   $('go').disabled=true; status('');
-  const steps=['Reading the garment…','Matching it to your photo…','Dressing you…','Adding folds and shadows…','Almost there…']; let si=0;
+  const steps=['Reading the garment…','Matching it to your photo…','Dressing you…','Adding folds and shadows…','Almost there…','Still working — big outfits take up to a minute…']; let si=0;
   $('go').innerHTML='<span class="spin"></span> '+steps[0]; const tick=setInterval(()=>{ si=Math.min(si+1,steps.length-1); $('go').innerHTML='<span class="spin"></span> '+steps[si]; },3500);
   try{
-    const r=await fetch('/api/tryon',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({person:{data:S.person.data,mime:S.person.mime},garments,note:$('note').value.trim()})});
+    const ac=new AbortController(); const kill=setTimeout(()=>ac.abort(),115000);
+    const r=await fetch('/api/tryon',{method:'POST',headers:{'content-type':'application/json'},signal:ac.signal,body:JSON.stringify({person:{data:S.person.data,mime:S.person.mime},garments,note:$('note').value.trim()})}).finally(()=>clearTimeout(kill));
     const j=await r.json().catch(()=>({}));
     if(!r.ok){ status(j.error==='setup' ? '⚙️ <b>Setup needed:</b> '+j.message : '❌ '+(j.message||j.error||('HTTP '+r.status)), true); }
     else { lastResult=j.image; $('rImg').src=j.image; $('bImg').src=S.person.url; $('cmp').style.setProperty('--cut','50%'); $('cut').value=50; $('dl').href=j.image; $('rText').textContent=(j.plan&&j.plan.garments)?('Understood: '+j.plan.garments.map(g=>'#'+g.n+' '+g.type+' — '+g.description).join(' | ')):(j.text||''); $('resCard').style.display='block';
       S.looks.push(j.image); if(S.looks.length>6) S.looks.shift(); LS('otr.looks',S.looks); renderLooks(); $('resCard').scrollIntoView({behavior:'smooth'}); }
-  }catch(err){ status('❌ Network error: '+err.message,true); }
+  }catch(err){ status(err.name==='AbortError' ? '⏱️ That one took too long. Tap Regenerate — it usually works on the second try.' : '❌ Network error: '+err.message,true); }
   clearInterval(tick); $('go').disabled=false; $('go').textContent='✨ Try it on';
 }
 $('go').onclick=tryOn; $('again').onclick=tryOn;
