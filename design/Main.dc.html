@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Off the Rack — landing page</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&amp;family=Manrope:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#F7F4EF}
+a{color:#7A2434}a:hover{color:#5C1A27}
+</style>
+</helmet>
+<div style="font-family: 'Manrope', system-ui, sans-serif; color: #1A1917; background: #F7F4EF; min-height: 100vh">
+
+<header style="border-bottom: 1px solid #E3DDD4">
+<nav aria-label="Main" style="max-width: 1200px; margin: 0 auto; padding: 18px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<a href="#top" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #1A1917">
+<svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true" fill="none" stroke="#7A2434" stroke-width="1.5" stroke-linejoin="round"><path d="M4 15 L15 4 H26 V15 L15 26 Z" fill="#7A2434"></path><circle cx="21" cy="9" r="2" fill="#F7F4EF" stroke="none"></circle></svg>
+<span style="font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 22px; letter-spacing: -0.01em">Off the Rack</span>
+</a>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 24px; font-size: 15px; font-weight: 500">
+<a href="#how" style="color: #1A1917; text-decoration: none">How it works</a>
+<a href="#pricing" style="color: #1A1917; text-decoration: none">Pricing</a>
+<a href="#safety" style="color: #1A1917; text-decoration: none">Safety</a>
+<a href="#start" style="background: #1A1917; color: #FFFFFF; text-decoration: none; padding: 12px 18px; border-radius: 999px; font-weight: 700; min-height: 44px; box-sizing: border-box; display: inline-flex; align-items: center">Try 3 looks free</a>
+</div>
+</nav>
+</header>
+
+<main id="top">
+<section style="max-width: 1200px; margin: 0 auto; padding: 72px 24px 64px; display: flex; flex-wrap: wrap; gap: 48px; align-items: center">
+<div style="flex: 1 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+<span style="font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; background: #E9D7B8; color: #1A1917; padding: 7px 12px; border-radius: 999px; align-self: flex-start">The in-store try-on app</span>
+<h1 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(44px, 6vw, 76px); line-height: 1.04; letter-spacing: -0.015em">See it on you before the fitting-room line.</h1>
+<p style="margin: 0; font-size: 20px; line-height: 1.5; color: #6B655E; max-width: 540px">Snap the hanger. Snap yourself. See the whole outfit on your real body in about 15 seconds. Any rack, any store — thrift, resale, off-price, or your own closet.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<a href="#start" style="background: #1A1917; color: #FFFFFF; border: 1px solid #1A1917; text-decoration: none; padding: 16px 26px; border-radius: 999px; font-weight: 700; font-size: 17px; box-shadow: 0 8px 24px rgba(26,25,23,0.12)">Try 3 looks free</a>
+<a href="#how" style="color: #1A1917; font-weight: 700; font-size: 16px; padding: 14px 8px">How it works →</a>
+</div>
+<p style="margin: 0; font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 13px; color: #6B655E">No card to start · Photos deleted in 24 hours · 18+</p>
+</div>
+
+<div style="flex: 1 1 380px; min-width: 0; display: flex; justify-content: center">
+<div style="position: relative; width: 320px; height: 600px; border: 1px solid #E3DDD4; border-radius: 40px; background: #FFFFFF; padding: 14px; box-sizing: border-box; box-shadow: 0 30px 60px rgba(26,25,23,0.14)">
+<div style="height: 100%; border-radius: 28px; background: #EFEAE3; display: flex; flex-direction: column; overflow: hidden">
+<div style="flex: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 12px">
+<div style="background: #E3DDD4; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #6B655E; font-size: 13px; text-align: center; padding: 8px">
+<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#6B655E" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="7" r="4"></circle><path d="M4 21c1-4 4-6 8-6s7 2 8 6"></path></svg>[Your photo]</div>
+<div style="background: #E3DDD4; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #6B655E; font-size: 13px; text-align: center; padding: 8px">
+<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#6B655E" stroke-width="1.5" aria-hidden="true"><path d="M12 4a2 2 0 1 1 2 2c-1 0-2 1-2 2v1l9 6v2H3v-2l9-6"></path></svg>[The hanger]</div>
+<div style="grid-column: 1 / 3; background: #FFFFFF; border: 1px solid #E3DDD4; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: #6B655E; font-size: 14px; min-height: 250px; text-align: center; padding: 12px">[Result: you, wearing it]</div>
+</div>
+<div style="background: #1A1917; color: #FFFFFF; padding: 14px 16px; font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 12px; display: flex; justify-content: space-between">
+<span>LOOK 1 OF 3</span><span>FREE</span>
+</div>
+</div>
+<div style="position: absolute; top: 120px; right: -34px; background: #7A2434; border-radius: 999px; padding: 10px 16px; font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 13px; letter-spacing: 0.1em; color: #FFFFFF">~15 SEC</div>
+</div>
+</div>
+</section>
+
+<div style="background: #1A1917; color: #F7F4EF; padding: 18px 24px; font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 28px; text-align: center">
+<span>Thrift</span><span aria-hidden="true">/</span><span>Resale</span><span aria-hidden="true">/</span><span>Off-price</span><span aria-hidden="true">/</span><span>Your closet</span><span aria-hidden="true">/</span><span>Anything on a hanger</span>
+</div>
+
+<section id="how" style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; display: flex; flex-direction: column; gap: 40px">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #6B655E">How it works</span>
+<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(34px, 4vw, 52px); letter-spacing: -0.015em; line-height: 1.08">Three taps, standing in the aisle.</h2>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px">
+<div style="background: #FFFFFF; border: 1px solid #E3DDD4; border-radius: 18px; padding: 28px; box-shadow: 0 8px 24px rgba(26,25,23,0.05); display: flex; flex-direction: column; gap: 14px">
+<span style="font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 14px; background: #1A1917; color: #FFFFFF; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 999px">01</span>
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 26px">Snap yourself</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.55; color: #6B655E">One full-body photo. Busy store backgrounds are fine — we keep it on your phone's session, not a gallery.</p>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #E3DDD4; border-radius: 18px; padding: 28px; box-shadow: 0 8px 24px rgba(26,25,23,0.05); display: flex; flex-direction: column; gap: 14px">
+<span style="font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 14px; background: #1A1917; color: #FFFFFF; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 999px">02</span>
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 26px">Snap the hanger</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.55; color: #6B655E">On the rack, on a hanger, flat on a table. Add a top and jeans together and see the full outfit at once.</p>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #E3DDD4; border-radius: 18px; padding: 28px; box-shadow: 0 8px 24px rgba(26,25,23,0.05); display: flex; flex-direction: column; gap: 14px">
+<span style="font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 14px; background: #1A1917; color: #FFFFFF; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 999px">03</span>
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 26px">See it on you</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.55; color: #6B655E">Your body, your shape, unretouched. Keep it, toss it, or text it to a friend before you buy.</p>
+</div>
+</div>
+</section>
+
+<section style="background: #EFEAE3">
+<div style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; display: flex; flex-direction: column; gap: 40px">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #6B655E">Why it's different</span>
+<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(34px, 4vw, 52px); letter-spacing: -0.015em; line-height: 1.08">Built for the rack, not a catalog.</h2>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px">
+<div style="background: #F7F4EF; border-radius: 16px; padding: 24px; display: flex; gap: 14px; align-items: flex-start">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1A1917" stroke-width="2" aria-hidden="true" style="flex: none; margin-top: 2px"><path d="M3 12 L12 3 H21 V12 L12 21 Z"></path></svg>
+<div style="display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 18px">Anything on the rack</strong><span style="font-size: 15px; line-height: 1.5; color: #6B655E">Big try-on tools only work with their own catalog. This works with whatever you're holding.</span></div>
+</div>
+<div style="background: #F7F4EF; border-radius: 16px; padding: 24px; display: flex; gap: 14px; align-items: flex-start">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1A1917" stroke-width="2" aria-hidden="true" style="flex: none; margin-top: 2px"><circle cx="12" cy="7" r="4"></circle><path d="M4 21c1-4 4-6 8-6s7 2 8 6"></path></svg>
+<div style="display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 18px">Your real body</strong><span style="font-size: 15px; line-height: 1.5; color: #6B655E">No slimming, no smoothing, no swapped face. If it won't fit you, you should see that here first.</span></div>
+</div>
+<div style="background: #F7F4EF; border-radius: 16px; padding: 24px; display: flex; gap: 14px; align-items: flex-start">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1A1917" stroke-width="2" aria-hidden="true" style="flex: none; margin-top: 2px"><rect x="3" y="6" width="18" height="13" rx="2"></rect><path d="M3 10h18"></path></svg>
+<div style="display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 18px">First looks free</strong><span style="font-size: 15px; line-height: 1.5; color: #6B655E">See three before you pay a cent. Packs never expire. No surprise weekly subscription.</span></div>
+</div>
+<div style="background: #F7F4EF; border-radius: 16px; padding: 24px; display: flex; gap: 14px; align-items: flex-start">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1A1917" stroke-width="2" aria-hidden="true" style="flex: none; margin-top: 2px"><path d="M8 3 L4 7 V20 H20 V7 L16 3 C15 5 9 5 8 3 Z"></path></svg>
+<div style="display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 18px">The whole outfit at once</strong><span style="font-size: 15px; line-height: 1.5; color: #6B655E">Top, bottom and jacket together — not one piece at a time.</span></div>
+</div>
+<div style="background: #F7F4EF; border-radius: 16px; padding: 24px; display: flex; gap: 14px; align-items: flex-start">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1A1917" stroke-width="2" aria-hidden="true" style="flex: none; margin-top: 2px"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+<div style="display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 18px">Gone in 24 hours</strong><span style="font-size: 15px; line-height: 1.5; color: #6B655E">Your photos and results are deleted automatically. Save the ones you want to your own phone.</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="pricing" style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; display: flex; flex-direction: column; gap: 40px">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #6B655E">Pricing</span>
+<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(34px, 4vw, 52px); letter-spacing: -0.015em; line-height: 1.08">Cheaper than a bad buy.</h2>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; align-items: stretch">
+<div style="border: 1px solid #E3DDD4; border-radius: 18px; padding: 26px; display: flex; flex-direction: column; gap: 12px; background: #FFFFFF">
+<span style="font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em">Free</span>
+<span style="font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 44px">$0</span>
+<span style="font-size: 15px; color: #6B655E; line-height: 1.5">3 looks to try it out. Standard quality, small watermark.</span>
+<a href="#start" style="margin-top: auto; text-align: center; border: 1px solid #1A1917; color: #1A1917; text-decoration: none; padding: 12px; border-radius: 999px; font-weight: 700">Start free</a>
+</div>
+<div style="border: 1px solid #E3DDD4; border-radius: 18px; padding: 26px; display: flex; flex-direction: column; gap: 12px; background: #FFFFFF">
+<span style="font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em">Pack of 20</span>
+<span style="font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 44px">$4.99</span>
+<span style="font-size: 15px; color: #6B655E; line-height: 1.5">One-time. 20 HD looks that never expire. Good for one big thrift run.</span>
+<a href="#start" style="margin-top: auto; text-align: center; border: 1px solid #1A1917; color: #1A1917; text-decoration: none; padding: 12px; border-radius: 999px; font-weight: 700">Buy the pack</a>
+</div>
+<div style="position: relative; border-radius: 18px; padding: 26px; display: flex; flex-direction: column; gap: 12px; background: #1A1917; color: #F7F4EF; box-shadow: 0 16px 40px rgba(26,25,23,0.18)">
+<span style="font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em">Shopper · most picked</span>
+<span style="font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 44px">$7.99<span style="font-size: 18px; font-weight: 600">/mo</span></span>
+<span style="font-size: 15px; color: #D9D2C8; line-height: 1.5">40 HD looks a month for regular shoppers. Cancel anytime.</span>
+<a href="#start" style="margin-top: auto; text-align: center; background: #E9D7B8; color: #1A1917; text-decoration: none; padding: 12px; border-radius: 999px; font-weight: 700">Get Shopper</a>
+</div>
+<div style="border: 1px solid #E3DDD4; border-radius: 18px; padding: 26px; display: flex; flex-direction: column; gap: 12px; background: #FFFFFF">
+<span style="font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em">Household</span>
+<span style="font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 44px">$12.99<span style="font-size: 18px; font-weight: 600">/mo</span></span>
+<span style="font-size: 15px; color: #6B655E; line-height: 1.5">100 HD looks a month, shared by up to 4 people.</span>
+<a href="#start" style="margin-top: auto; text-align: center; border: 1px solid #1A1917; color: #1A1917; text-decoration: none; padding: 12px; border-radius: 999px; font-weight: 700">Get Household</a>
+</div>
+</div>
+<p style="margin: 0; font-size: 15px; color: #6B655E"><strong style="color: #1A1917">Founding 10:</strong> the first 10 shoppers get a full year of Shopper for $29. · Every plan is capped at 15 looks a day.</p>
+</section>
+
+<section id="safety" style="background: #1A1917; color: #F7F4EF">
+<div style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; display: flex; flex-wrap: wrap; gap: 48px">
+<div style="flex: 1 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<span style="font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #E9D7B8">Safety</span>
+<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(34px, 4vw, 52px); letter-spacing: -0.015em; line-height: 1.08">Your photo stays yours.</h2>
+<p style="margin: 0; font-size: 17px; line-height: 1.55; color: #D9D2C8">A try-on app handles the most personal photo you own. These rules are built in, not bolted on.</p>
+</div>
+<ul style="flex: 1 1 480px; min-width: 0; margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; font-size: 16px; line-height: 1.5">
+<li style="display: flex; gap: 12px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E9D7B8" stroke-width="2.5" aria-hidden="true" style="flex: none; margin-top: 3px"><path d="M5 12l5 5 9-10"></path></svg><span><strong>18+ only.</strong> You confirm it's you, or that you have permission, before every upload.</span></li>
+<li style="display: flex; gap: 12px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E9D7B8" stroke-width="2.5" aria-hidden="true" style="flex: none; margin-top: 3px"><path d="M5 12l5 5 9-10"></path></svg><span><strong>Clothes on, always.</strong> Requests to undress or sexualize anyone are blocked and the account is closed.</span></li>
+<li style="display: flex; gap: 12px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E9D7B8" stroke-width="2.5" aria-hidden="true" style="flex: none; margin-top: 3px"><path d="M5 12l5 5 9-10"></path></svg><span><strong>Deleted in 24 hours.</strong> We never build a face or body profile.</span></li>
+<li style="display: flex; gap: 12px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E9D7B8" stroke-width="2.5" aria-hidden="true" style="flex: none; margin-top: 3px"><path d="M5 12l5 5 9-10"></path></svg><span><strong>Report and remove.</strong> Anyone can ask us to take down an image of them, and we act within 48 hours.</span></li>
+</ul>
+</div>
+</section>
+
+<section style="max-width: 900px; margin: 0 auto; padding: 96px 24px; display: flex; flex-direction: column; gap: 24px">
+<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(30px, 3.5vw, 44px); letter-spacing: -0.015em">Questions</h2>
+<div style="display: flex; flex-direction: column; border-top: 1px solid #1A1917">
+<div style="padding: 20px 0; border-bottom: 1px solid #E3DDD4; display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 18px">Do I need to download anything?</strong><span style="font-size: 16px; color: #6B655E; line-height: 1.5">No. It runs in your phone's browser. Add it to your home screen if you want it one tap away.</span></div>
+<div style="padding: 20px 0; border-bottom: 1px solid #E3DDD4; display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 18px">How accurate is it?</strong><span style="font-size: 16px; color: #6B655E; line-height: 1.5">It shows how the piece looks and drapes on your body. It can't promise the tag size fits — check the size before you buy.</span></div>
+<div style="padding: 20px 0; border-bottom: 1px solid #E3DDD4; display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 18px">Do my looks expire?</strong><span style="font-size: 16px; color: #6B655E; line-height: 1.5">Pack looks never expire. Monthly looks reset each billing month.</span></div>
+</div>
+</section>
+
+<section id="start" style="padding: 0 24px 96px">
+<div style="max-width: 1152px; margin: 0 auto; background: #7A2434; color: #F7F4EF; border-radius: 28px; padding: 56px 32px; display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; box-shadow: 0 20px 50px rgba(26,25,23,0.16)">
+<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(34px, 4.5vw, 58px); letter-spacing: -0.015em; line-height: 1">Next time you're at the rack, try it on here first.</h2>
+<a href="#top" style="background: #E9D7B8; color: #1A1917; text-decoration: none; padding: 16px 28px; border-radius: 999px; font-weight: 700; font-size: 17px">Try 3 looks free</a>
+<span style="font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 13px">Works on iPhone and Android · No app store</span>
+</div>
+</section>
+</main>
+
+<footer style="border-top: 1px solid #E3DDD4">
+<div style="max-width: 1200px; margin: 0 auto; padding: 28px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 14px; color: #6B655E">
+<span>© 2026 Off the Rack · [offtherack.app]</span>
+<div style="display: flex; flex-wrap: wrap; gap: 20px">
+<a href="#safety">Report a photo</a><a href="#safety">Privacy</a><a href="#safety">Terms</a>
+</div>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":5200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
