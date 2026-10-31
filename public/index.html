@@ -4,7 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#b4532a">
+<meta name="theme-color" content="#1A1917">
+<link rel="manifest" href="/manifest.json">
+<meta name="apple-mobile-web-app-title" content="Off the Rack">
 <title>Fitting Room AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -41,12 +43,27 @@
   @keyframes s{to{transform:rotate(360deg)}}
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;padding:12px;z-index:10}
   .modal.on{display:flex} .modal img{max-width:100%;max-height:85vh;border-radius:10px}
+  .cmp{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--bg)}
+  .cmp img{width:100%;display:block}
+  .cmp .after{position:absolute;inset:0;clip-path:inset(0 0 0 var(--cut,50%))}
+  .cmp .bar{position:absolute;top:0;bottom:0;left:var(--cut,50%);width:2px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.25);pointer-events:none}
+  .cmp .tag{position:absolute;top:10px;font-size:11px;font-weight:700;letter-spacing:.08em;padding:4px 8px;border-radius:999px;background:rgba(0,0,0,.55);color:#fff;pointer-events:none}
+  .cmp input[type=range]{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;touch-action:pan-y}
+  .tips{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px;display:flex;gap:12px;align-items:flex-start}
+  .tips ul{margin:6px 0 0;padding-left:18px;font-size:13px;line-height:1.5;color:var(--muted)}
+  .install{background:var(--ink);color:var(--bg);border-radius:12px;padding:10px 12px;font-size:13px;display:none;align-items:center;gap:10px;margin-bottom:14px}
+  .install.on{display:flex} .install .btn{color:var(--ink)}
+  .prog{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted);margin-top:10px}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>👗 Fitting Room AI</h1>
   <div class="sub">Photo of the person + photos of clothes → AI puts them on</div>
+  <div class="install" id="install"><span id="installMsg" style="flex:1"></span><button class="btn sm" id="installBtn">Add</button><button class="btn sm" id="installX">Later</button></div>
+  <div class="tips" id="tips"><div style="flex:1"><strong style="font-size:14px">Photos that work best</strong>
+    <ul><li><b>You:</b> full body, arms slightly away from your sides, facing the camera, even light.</li><li><b>Clothes:</b> on the hanger, on the rack, or flat — fill the frame, tag visible is fine.</li><li>Busy backgrounds are OK. Mirrors and other people in frame are not.</li></ul></div>
+    <button class="btn sm" id="tipsX" aria-label="Dismiss tips">Got it</button></div>
 
   <div class="card">
     <h2>1 · The person</h2>
@@ -78,9 +95,14 @@
 
   <div class="card result" id="resCard" style="display:none">
     <h2>Result</h2>
-    <img id="rImg" alt="Try-on result">
+    <div class="cmp" id="cmp" style="--cut:50%">
+      <img id="bImg" alt="Before"><img id="rImg" class="after" alt="Try-on result">
+      <div class="bar"></div><span class="tag" style="left:10px">BEFORE</span><span class="tag" style="right:10px">AFTER</span>
+      <input type="range" id="cut" min="0" max="100" value="50" aria-label="Compare before and after">
+    </div>
     <div class="row" style="margin-top:10px">
       <button class="btn sm" id="useBase">👕 Keep & add more on top</button>
+      <button class="btn sm" id="undoBase" style="display:none">↩ Back to original photo</button>
       <a class="btn sm" id="dl" download="fitting-room.png">⬇️ Save image</a>
       <button class="btn sm" id="again">🔁 Regenerate</button>
     </div>
@@ -101,7 +123,8 @@
 
 <script>
 const $=id=>document.getElementById(id);
-const S={person:null, items:[], looks:[]};
+const S={person:null, original:null, items:[], looks:[]};
+const LS=(k,v)=>{try{ if(v===undefined) return JSON.parse(localStorage.getItem(k)); localStorage.setItem(k,JSON.stringify(v)); }catch{ return null; }};
 
 async function fileToJpeg(file, max=1024){
   let bmp; try{ bmp=await createImageBitmap(file); }catch{
@@ -114,7 +137,7 @@ const status=(m,bad)=>{const e=$('status'); e.style.display=m?'block':'none'; e.
 const ready=()=>$('go').classList.toggle('off', !(S.person && S.items.some(i=>i.on)));
 
 async function onPerson(e){ const f=e.target.files&&e.target.files[0]; e.target.value=''; if(!f) return;
-  try{ S.person=await fileToJpeg(f,1280); $('pImg').src=S.person.url; $('pImg').style.display='block'; status(''); }catch{ status("Couldn't open that photo. If it's an iPhone HEIC, set Settings → Camera → Formats → Most Compatible.",true); } ready(); }
+  try{ S.person=await fileToJpeg(f,1280); S.original=S.person; $('undoBase').style.display='none'; $('pImg').src=S.person.url; $('pImg').style.display='block'; status(''); }catch{ status("Couldn't open that photo. If it's an iPhone HEIC, set Settings → Camera → Formats → Most Compatible.",true); } ready(); }
 async function onCloth(e){ const fs=[...(e.target.files||[])]; e.target.value=''; for(const f of fs){ try{ const j=await fileToJpeg(f,1024); S.items.push({...j,on:true}); }catch{ status("Couldn't open one of the photos.",true);} } renderTray(); ready(); }
 ['f-person','f-person-cam'].forEach(id=>$(id).addEventListener('change',onPerson));
 ['f-cloth','f-cloth-cam'].forEach(id=>$(id).addEventListener('change',onCloth));
@@ -126,20 +149,37 @@ function renderTray(){ const t=$('tray'); t.innerHTML='';
 let lastResult=null;
 async function tryOn(){
   const garments=S.items.filter(i=>i.on).map(i=>({data:i.data,mime:i.mime})); if(!S.person||!garments.length) return;
-  $('go').disabled=true; $('go').innerHTML='<span class="spin"></span> Dressing… (10–30 s)'; status('');
+  $('go').disabled=true; status('');
+  const steps=['Reading the garment…','Matching it to your photo…','Dressing you…','Adding folds and shadows…','Almost there…']; let si=0;
+  $('go').innerHTML='<span class="spin"></span> '+steps[0]; const tick=setInterval(()=>{ si=Math.min(si+1,steps.length-1); $('go').innerHTML='<span class="spin"></span> '+steps[si]; },3500);
   try{
     const r=await fetch('/api/tryon',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({person:{data:S.person.data,mime:S.person.mime},garments,note:$('note').value.trim()})});
     const j=await r.json().catch(()=>({}));
     if(!r.ok){ status(j.error==='setup' ? '⚙️ <b>Setup needed:</b> '+j.message : '❌ '+(j.message||j.error||('HTTP '+r.status)), true); }
-    else { lastResult=j.image; $('rImg').src=j.image; $('dl').href=j.image; $('rText').textContent=(j.plan&&j.plan.garments)?('Understood: '+j.plan.garments.map(g=>'#'+g.n+' '+g.type+' — '+g.description).join(' | ')):(j.text||''); $('resCard').style.display='block';
-      S.looks.push(j.image); renderLooks(); $('resCard').scrollIntoView({behavior:'smooth'}); }
+    else { lastResult=j.image; $('rImg').src=j.image; $('bImg').src=S.person.url; $('cmp').style.setProperty('--cut','50%'); $('cut').value=50; $('dl').href=j.image; $('rText').textContent=(j.plan&&j.plan.garments)?('Understood: '+j.plan.garments.map(g=>'#'+g.n+' '+g.type+' — '+g.description).join(' | ')):(j.text||''); $('resCard').style.display='block';
+      S.looks.push(j.image); if(S.looks.length>6) S.looks.shift(); LS('otr.looks',S.looks); renderLooks(); $('resCard').scrollIntoView({behavior:'smooth'}); }
   }catch(err){ status('❌ Network error: '+err.message,true); }
-  $('go').disabled=false; $('go').textContent='✨ Try it on';
+  clearInterval(tick); $('go').disabled=false; $('go').textContent='✨ Try it on';
 }
 $('go').onclick=tryOn; $('again').onclick=tryOn;
-$('useBase').onclick=()=>{ if(!lastResult) return; S.person={url:lastResult,data:lastResult.split(',')[1],mime:lastResult.slice(5,lastResult.indexOf(';'))}; $('pImg').src=lastResult; S.items.forEach(i=>i.on=false); renderTray(); ready(); status('Result is now the base photo — select the next item(s) and try on again.'); window.scrollTo({top:0,behavior:'smooth'}); };
+$('useBase').onclick=()=>{ if(!lastResult) return; $('undoBase').style.display='inline-flex'; S.person={url:lastResult,data:lastResult.split(',')[1],mime:lastResult.slice(5,lastResult.indexOf(';'))}; $('pImg').src=lastResult; S.items.forEach(i=>i.on=false); renderTray(); ready(); status('Result is now the base photo — select the next item(s) and try on again.'); window.scrollTo({top:0,behavior:'smooth'}); };
 function renderLooks(){ $('looksCard').style.display=S.looks.length?'block':'none'; const g=$('looks'); g.innerHTML=''; S.looks.forEach(u=>{ const im=new Image(); im.src=u; im.onclick=()=>{$('mImg').src=u; $('modal').classList.add('on');}; g.appendChild(im); }); }
 $('modal').onclick=()=>$('modal').classList.remove('on');
+$('undoBase').onclick=()=>{ if(!S.original) return; S.person=S.original; $('pImg').src=S.original.url; $('undoBase').style.display='none'; status('Back to your original photo.'); ready(); };
+$('cut').oninput=e=>$('cmp').style.setProperty('--cut',e.target.value+'%');
+// tips card (once)
+if(LS('otr.tips')) $('tips').style.display='none';
+$('tipsX').onclick=()=>{ $('tips').style.display='none'; LS('otr.tips',1); };
+// looks survive refresh
+(()=>{ const saved=LS('otr.looks'); if(Array.isArray(saved)&&saved.length){ S.looks=saved; renderLooks(); } })();
+// add to home screen
+(()=>{ const standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone; if(standalone||LS('otr.install')) return;
+  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent); let deferred=null;
+  window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); deferred=e; $('installMsg').textContent='Add Off the Rack to your home screen for one-tap try-ons.'; $('install').classList.add('on'); });
+  if(ios){ $('installMsg').textContent='Add to Home Screen: tap Share, then “Add to Home Screen”.'; $('installBtn').style.display='none'; $('install').classList.add('on'); }
+  $('installBtn').onclick=async()=>{ if(deferred){ deferred.prompt(); await deferred.userChoice; } $('install').classList.remove('on'); LS('otr.install',1); };
+  $('installX').onclick=()=>{ $('install').classList.remove('on'); LS('otr.install',1); };
+})();
 </script>
 </body>
 </html>
