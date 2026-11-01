@@ -1,3 +1,5 @@
+Status: resolved — Stage 8 B1, B2, M2, M3, N1–N4 applied in PR #5 (merged); M1 (wizard vs single-scroll) and N5 (note field, now sanitized) recorded as accepted for Phase 1.
+
 # Stage 8 — Intermediate Zoom Out: Off the Rack (post Stage 5–7 fixes)
 
 Reviewer: egm-zoom-out, fresh context. Read: all 10 artboards, `design/README.md`, `public/index.html`, `public/app/index.html`, the three static pages; context only: Stage 5 report, goldfish report, blueprint summary, `api/tryon.js`.
