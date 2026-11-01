@@ -205,6 +205,7 @@ let lastResult=null, ac=null;
 const ERR={setup:'We\'re doing maintenance. Try again in a few minutes.',
   noimage:'We couldn\'t make that one. Try a clearer full-body photo, or a flatter photo of the item.',
   timeout:'That one took too long. Tap Try again — it usually works on the second go.',
+  cap:'You\'ve hit today\'s limit of 15 looks. Come back tomorrow.',
   blocked:null, generic:'Something went wrong on our end. Tap Try again. If it keeps happening, try a different photo.'};
 function blocked(msg){ status('<strong>We can\'t make this one.</strong><br>'+(msg||'This request isn\'t something we\'ll generate.')+'<br>We dress real people, 18 and over, with their clothes on.<br><a class="btn ghost" href="/report.html">Report a problem</a> <button class="btn ghost" id="startOver">Start over</button>',true); $('startOver').onclick=startOver; }
 function startOver(){ S.person=S.original=null; S.items=[]; $('drop').classList.remove('has'); $('pImg').removeAttribute('src'); renderTray(); status(''); $('resCard').style.display='none'; DB.set('session',null); ready(); window.scrollTo({top:0,behavior:'smooth'}); }
@@ -219,7 +220,7 @@ async function tryOn(){
     ac=new AbortController(); const kill=setTimeout(()=>ac.abort('timeout'),115000);
     const r=await fetch('/api/tryon',{method:'POST',headers:{'content-type':'application/json'},signal:ac.signal,body:JSON.stringify({person:{data:S.person.data,mime:S.person.mime},garments,note:$('note').value.trim()})}).finally(()=>clearTimeout(kill));
     const j=await r.json().catch(()=>({}));
-    if(!r.ok){ if(j.error==='setup') console.warn(j.message); if(j.error==='blocked') blocked(j.message); else status((ERR[j.error]||ERR.generic)+' <button class="btn ghost" id="retry">Try again</button>',true), $('retry').onclick=tryOn; }
+    if(!r.ok){ if(j.error==='setup') console.warn(j.message); if(j.error==='blocked') blocked(j.message); else if(j.error==='cap') status(ERR.cap,true); else status((ERR[j.error]||ERR.generic)+' <button class="btn ghost" id="retry">Try again</button>',true), $('retry').onclick=tryOn; }
     else { lastResult=j.image; $('rImg').src=j.image; $('bImg').src=S.person.url; $('cmp').style.setProperty('--cut','50%'); $('cut').value=50;
       const seen=(j.plan&&j.plan.garments)?j.plan.garments.map(g=>g.description||g.type).join(', '):(j.text||''); $('rText').textContent=seen?('Wearing: '+seen):''; $('seen').style.display=seen?'block':'none';
       $('resCard').style.display='block'; pushLook(j.image); $('resCard').scrollIntoView({behavior:'smooth'}); }
@@ -245,8 +246,8 @@ function pushLook(src){ S.looks.push({src,at:Date.now()}); if(S.looks.length>6) 
 function renderLooks(){ $('looksCard').style.display=S.looks.length?'block':'none'; const g=$('looks'); g.innerHTML=''; S.looks.forEach(l=>{ const im=new Image(); im.src=l.src; im.alt='Recent look'; im.onclick=()=>{$('mImg').src=l.src; $('modal').classList.add('on');}; g.appendChild(im); }); }
 $('modal').onclick=()=>$('modal').classList.remove('on');
 (()=>{ const saved=LS('otr.looks'); if(Array.isArray(saved)){ S.looks=saved.filter(l=>l&&l.src&&Date.now()-l.at<DAY); LS('otr.looks',S.looks); renderLooks(); } })();
-// consent remembered 30 days
-(()=>{ const at=LS('otr.consent'); if(at&&Date.now()-at<30*DAY){ $('consent').checked=true; $('consentWhen').textContent='Confirmed on '+new Date(at).toLocaleDateString(); $('consentWhen').style.display='block'; } ready(); })();
+// consent remembered for the 2 h session only
+(()=>{ const at=LS('otr.consent'); if(at&&Date.now()-at<2*36e5){ $('consent').checked=true; $('consentWhen').textContent='Confirmed on '+new Date(at).toLocaleDateString(); $('consentWhen').style.display='block'; } ready(); })();
 // restore an in-progress session (2 h)
 (async()=>{ const s=await DB.get('session'); if(s&&Date.now()-s.at<2*36e5){ S.person=s.person; S.original=s.original||s.person; S.items=s.items||[]; showPerson(); renderTray(); ready(); } })();
 // tips card (once)
