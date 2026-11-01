@@ -2,121 +2,165 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#1A1917">
 <link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
 <meta name="apple-mobile-web-app-title" content="Off the Rack">
-<title>Fitting Room AI</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Off the Rack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#f6f4f1;--card:#fff;--ink:#1d1b19;--muted:#78716c;--line:#e7e2dc;--accent:#b4532a;--accent-ink:#fff}
-  @media (prefers-color-scheme:dark){:root{--bg:#141312;--card:#1e1c1a;--ink:#f3efe9;--muted:#a8a29e;--line:#33302c;--accent:#e07a4b;--accent-ink:#1a0f09}}
-  *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif}
-  .wrap{max-width:900px;margin:0 auto;padding:16px}
-  h1{font-size:22px;margin:0;letter-spacing:-.02em} .sub{color:var(--muted);font-size:13px;margin-bottom:12px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px}
-  .card h2{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
-  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 14px Inter,sans-serif;padding:10px 14px;border-radius:10px;cursor:pointer;user-select:none}
-  .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-  .btn.big{width:100%;justify-content:center;padding:14px;font-size:16px}
-  .btn.sm{padding:6px 10px;font-size:13px;border-radius:8px}
-  .btn[disabled],.btn.off{opacity:.45;pointer-events:none}
+  :root{--bone:#F7F4EF;--linen:#EFEAE3;--line:#E3DDD4;--dashed:#BDB5AA;--ink:#1A1917;--stone:#6B655E;--merlot:#7A2434;--champagne:#E9D7B8;--white:#FFFFFF}
+  *{box-sizing:border-box} html,body{margin:0;background:var(--bone);color:var(--ink);font-family:Manrope,system-ui,sans-serif;font-size:16px;line-height:1.45}
+  .wrap{max-width:560px;margin:0 auto;padding:16px 16px 40px}
+  .top{display:flex;align-items:center;justify-content:space-between;padding:4px 0 12px}
+  .brand{display:flex;align-items:center;gap:8px;font-family:Fraunces,Georgia,serif;font-size:20px;letter-spacing:-.01em}
+  .pill{font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;background:var(--ink);color:var(--white);padding:7px 11px;border-radius:999px}
+  h1{font-family:Fraunces,Georgia,serif;font-weight:500;font-size:30px;line-height:1.08;letter-spacing:-.015em;margin:0 0 6px}
+  .sub{color:var(--stone);font-size:16px;margin:0 0 16px}
+  .step{font-weight:600;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--stone);margin:0 0 8px}
+  .card{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;border:1px solid var(--ink);background:var(--white);color:var(--ink);font:700 16px Manrope,sans-serif;padding:0 18px;border-radius:999px;cursor:pointer;user-select:none;text-decoration:none}
+  .btn.primary{background:var(--ink);color:var(--white)}
+  .btn.merlot{background:var(--merlot);border-color:var(--merlot);color:var(--white)}
+  .btn.big{width:100%;min-height:56px;font-size:17px;box-shadow:0 8px 24px rgba(26,25,23,.12)}
+  .btn.half{flex:1 1 0}
+  .btn[disabled],.btn.off{opacity:.4;pointer-events:none}
+  .btn.ghost{border-color:var(--line);font-weight:600;min-height:44px}
+  .btn svg{flex:none}
   input.fi{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
-  .person{display:flex;gap:12px;align-items:flex-start}
-  .person img{width:120px;height:160px;object-fit:cover;border-radius:10px;border:1px solid var(--line);background:var(--bg)}
-  .tray{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:10px}
-  .item{position:relative;aspect-ratio:3/4;border:2px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer;background:var(--bg)}
-  .item.on{border-color:var(--accent)} .item img{width:100%;height:100%;object-fit:cover}
-  .item .x{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;border:none;background:rgba(0,0,0,.6);color:#fff;font-size:12px;cursor:pointer;padding:0}
-  .item .chk{position:absolute;left:4px;bottom:4px;background:var(--accent);color:var(--accent-ink);font-size:11px;font-weight:700;border-radius:6px;padding:2px 6px;display:none}
+  .drop{min-height:200px;border:1.5px dashed var(--dashed);border-radius:18px;background:var(--linen);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--stone);text-align:center;padding:18px;margin-bottom:12px}
+  .drop img{max-height:260px;max-width:100%;border-radius:12px;display:none;border:1px solid var(--line)}
+  .drop.has{border-style:solid;background:var(--white);padding:8px} .drop.has img{display:block} .drop.has .ph{display:none}
+  .hint{font-size:14px;color:var(--stone);line-height:1.45;margin:10px 0 0}
+  .consent{display:flex;gap:12px;align-items:flex-start;font-size:15px;line-height:1.4;background:var(--bone);border:1px solid var(--line);border-radius:14px;padding:12px;margin:12px 0}
+  .consent input{width:22px;height:22px;margin:2px 0 0;flex:none;accent-color:var(--ink)}
+  .consent small{display:block;color:var(--stone);font-size:13px;margin-top:4px}
+  .tray{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+  .item{position:relative;aspect-ratio:3/4;border:2px solid var(--line);border-radius:16px;overflow:hidden;cursor:pointer;background:var(--linen)}
+  .item.on{border-color:var(--merlot)} .item img{width:100%;height:100%;object-fit:cover;display:block}
+  .item .x{position:absolute;top:0;right:0;width:44px;height:44px;border:none;background:transparent;padding:6px;cursor:pointer}
+  .item .x span{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:rgba(26,25,23,.75);color:#fff;font-size:16px;margin-left:auto}
+  .item .chk{position:absolute;left:6px;bottom:6px;background:var(--merlot);color:#fff;font-size:13px;font-weight:700;border-radius:999px;padding:4px 9px;display:none}
   .item.on .chk{display:block}
-  textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font:14px Inter,sans-serif;background:var(--bg);color:var(--ink);resize:vertical;min-height:44px}
-  .hint{font-size:12px;color:var(--muted);line-height:1.45}
-  .result img{width:100%;border-radius:12px;border:1px solid var(--line);display:block}
-  .status{padding:10px 12px;border-radius:10px;font-size:13px;line-height:1.45;background:var(--bg);margin-top:10px}
-  .status.bad{background:#fde8e1;color:#7a2511} @media (prefers-color-scheme:dark){.status.bad{background:#3a1d14;color:#ffc9b5}}
-  .looks{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
-  .looks img{width:100%;border-radius:8px;border:1px solid var(--line);cursor:pointer;display:block}
-  .spin{display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:s .8s linear infinite}
+  label.note{display:block;font-size:14px;font-weight:700;margin-top:14px}
+  input.note{width:100%;min-height:48px;border:1px solid var(--dashed);border-radius:12px;padding:0 14px;font:400 16px Manrope,sans-serif;background:var(--white);color:var(--ink);margin-top:6px}
+  .status{padding:14px;border-radius:14px;font-size:15px;line-height:1.45;background:var(--linen);margin-top:12px}
+  .status.bad{background:#F6E3E6;color:#5C1A26}
+  .status .btn{margin-top:10px}
+  .work{display:none;background:var(--white);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px}
+  .work.on{display:block}
+  .work .thumbs{display:flex;gap:8px;margin-bottom:12px} .work .thumbs img{width:56px;height:72px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+  .work ol{margin:0 0 12px;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:15px;color:var(--stone)}
+  .work li.on{color:var(--ink);font-weight:700} .work li.done{color:var(--stone);text-decoration:line-through}
+  .spin{display:inline-block;width:16px;height:16px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:s .8s linear infinite;vertical-align:-3px;margin-right:6px}
   @keyframes s{to{transform:rotate(360deg)}}
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;padding:12px;z-index:10}
-  .modal.on{display:flex} .modal img{max-width:100%;max-height:85vh;border-radius:10px}
-  .cmp{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--bg)}
+  .cmp{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--linen)}
   .cmp img{width:100%;display:block}
   .cmp .after{position:absolute;inset:0;clip-path:inset(0 0 0 var(--cut,50%))}
   .cmp .bar{position:absolute;top:0;bottom:0;left:var(--cut,50%);width:2px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.25);pointer-events:none}
-  .cmp .tag{position:absolute;top:10px;font-size:11px;font-weight:700;letter-spacing:.08em;padding:4px 8px;border-radius:999px;background:rgba(0,0,0,.55);color:#fff;pointer-events:none}
+  .cmp .tag{position:absolute;top:12px;font-size:13px;font-weight:600;letter-spacing:.08em;padding:5px 10px;border-radius:999px;background:rgba(26,25,23,.7);color:#fff;pointer-events:none}
+  .cmp .ai{position:absolute;bottom:12px;right:12px;font-size:13px;font-weight:600;letter-spacing:.04em;padding:5px 10px;border-radius:999px;background:var(--stone);color:#fff;pointer-events:none}
   .cmp input[type=range]{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;touch-action:pan-y}
-  .tips{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px;display:flex;gap:12px;align-items:flex-start}
-  .tips ul{margin:6px 0 0;padding-left:18px;font-size:13px;line-height:1.5;color:var(--muted)}
-  .install{background:var(--ink);color:var(--bg);border-radius:12px;padding:10px 12px;font-size:13px;display:none;align-items:center;gap:10px;margin-bottom:14px}
-  .install.on{display:flex} .install .btn{color:var(--ink)}
-  .prog{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted);margin-top:10px}
+  .acts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+  .acts .btn{padding:0 8px;border-radius:14px;font-size:14px;min-height:52px;flex-direction:column;gap:2px}
+  .links{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px;font-size:14px}
+  .links button,.links a{background:none;border:none;padding:10px 0;font:600 14px Manrope,sans-serif;color:var(--merlot);cursor:pointer;text-decoration:none;min-height:44px}
+  details{margin-top:8px;font-size:14px;color:var(--stone)} summary{cursor:pointer;font-weight:600;min-height:44px;display:flex;align-items:center}
+  .looks{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px}
+  .looks img{width:100%;border-radius:10px;border:1px solid var(--line);cursor:pointer;display:block}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:12px;z-index:10}
+  .modal.on{display:flex} .modal img{max-width:100%;max-height:85vh;border-radius:12px}
+  .tips{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px;display:flex;gap:12px;align-items:flex-start}
+  .tips ul{margin:6px 0 0;padding-left:18px;font-size:14px;line-height:1.5;color:var(--stone)}
+  .install{background:var(--ink);color:var(--bone);border-radius:14px;padding:10px 14px;font-size:14px;display:none;align-items:center;gap:10px;margin-bottom:14px}
+  .install.on{display:flex} .install .btn{color:var(--ink);background:var(--champagne);border-color:var(--champagne);min-height:44px;font-size:14px}
+  footer{margin-top:28px;font-size:13px;color:var(--stone);display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center}
+  footer a{color:var(--stone);min-height:44px;display:inline-flex;align-items:center}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>👗 Fitting Room AI</h1>
-  <div class="sub">Photo of the person + photos of clothes → AI puts them on</div>
-  <div class="install" id="install"><span id="installMsg" style="flex:1"></span><button class="btn sm" id="installBtn">Add</button><button class="btn sm" id="installX">Later</button></div>
-  <div class="tips" id="tips"><div style="flex:1"><strong style="font-size:14px">Photos that work best</strong>
-    <ul><li><b>You:</b> full body, arms slightly away from your sides, facing the camera, even light.</li><li><b>Clothes:</b> on the hanger, on the rack, or flat — fill the frame, tag visible is fine.</li><li>Busy backgrounds are OK. Mirrors and other people in frame are not.</li></ul></div>
-    <button class="btn sm" id="tipsX" aria-label="Dismiss tips">Got it</button></div>
+  <div class="top">
+    <div class="brand"><svg width="26" height="26" viewBox="0 0 30 30" aria-hidden="true"><path d="M4 15 L15 4 H26 V15 L15 26 Z" fill="#7A2434"/><circle cx="21" cy="9" r="2" fill="#F7F4EF"/></svg>Off the Rack</div>
+    <span class="pill">Free preview</span>
+  </div>
+  <h1>Snap yourself. Snap the hanger. See it on you.</h1>
+  <p class="sub">Your photos are never stored on our servers. Results stay on your phone for 24 hours unless you save them.</p>
+  <div class="install" id="install"><span id="installMsg" style="flex:1"></span><button class="btn" id="installBtn">Add</button><button class="btn ghost" id="installX" style="color:var(--bone);border-color:var(--stone);background:transparent">Later</button></div>
+  <div class="tips" id="tips"><div style="flex:1"><strong style="font-size:15px">Photos that work best</strong>
+    <ul><li><b>You:</b> full body, arms a little away from your sides, facing the camera, even light. Ask a friend, or prop the phone and use the timer. A mirror selfie works if nobody else is in frame.</li><li><b>Items:</b> on the hanger, on the rack, or flat — fill the frame; the tag can show.</li></ul></div>
+    <button class="btn ghost" id="tipsX" aria-label="Dismiss tips">Got it</button></div>
 
-  <div class="card">
-    <h2>1 · The person</h2>
-    <div class="person">
-      <img id="pImg" alt="" style="display:none">
-      <div>
-        <div class="row">
-          <label class="btn primary" for="f-person-cam">📷 Take photo</label>
-          <label class="btn" for="f-person">🖼️ Library</label>
-        </div>
-        <p class="hint">Full body, facing the camera, decent light. Busy backgrounds are fine.</p>
-      </div>
+  <div class="card" id="step1">
+    <p class="step">Step 1 · You</p>
+    <div class="drop" id="drop"><img id="pImg" alt="Your photo"><div class="ph"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#6B655E" stroke-width="1.3" aria-hidden="true"><circle cx="12" cy="6" r="3"/><path d="M12 9v7M8 12h8M12 16l-3 5M12 16l3 5"/></svg><div style="font-size:15px">Full body, head to toe, facing the camera.<br>Busy backgrounds are fine.</div></div></div>
+    <div class="row">
+      <label class="btn primary half" for="f-person-cam"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Take photo</label>
+      <label class="btn half" for="f-person"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/></svg>From library</label>
     </div>
+    <label class="consent"><input type="checkbox" id="consent"><span>I'm 18 or older, and this is me.<small>Clothes stay on. Requests to undress anyone are blocked.</small><small id="consentWhen" style="display:none"></small></span></label>
   </div>
 
-  <div class="card">
-    <h2>2 · The clothes</h2>
+  <div class="card" id="step2">
+    <p class="step">Step 2 · The clothes</p>
     <div class="row">
-      <label class="btn primary" for="f-cloth-cam">📷 Snap item</label>
-      <label class="btn" for="f-cloth">🖼️ Library</label>
+      <label class="btn primary half" for="f-cloth-cam"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Snap the hanger</label>
+      <label class="btn half" for="f-cloth"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/></svg>From library</label>
     </div>
     <div class="tray" id="tray"></div>
-    <p class="hint">On a hanger, on a rack, flat, or on a mannequin — all work. Tap items to select which ones go on together (e.g. a top + jeans).</p>
-    <textarea id="note" placeholder="Optional: e.g. “tuck the shirt in”, “wear the jacket open”, “keep her current jeans”"></textarea>
+    <p class="hint" id="trayHint">On a hanger, on a rack, flat, or on a mannequin — all work. Snap a top and jeans and they go on together.</p>
+    <label class="note">Anything specific? (optional)<input class="note" id="note" placeholder="Tuck the shirt in, jacket open" maxlength="200"></label>
   </div>
 
-  <button class="btn primary big off" id="go">✨ Try it on</button>
-  <div class="status" id="status" style="display:none"></div>
+  <button class="btn primary big off" id="go">Try it on</button>
+  <p class="hint" id="goHint" style="text-align:center">Add your photo, tick the box, and pick at least one item.</p>
+  <div class="status" id="status" style="display:none" role="status"></div>
 
-  <div class="card result" id="resCard" style="display:none">
-    <h2>Result</h2>
+  <div class="work" id="work" aria-live="polite">
+    <div class="thumbs" id="workThumbs"></div>
+    <strong style="font-size:17px;display:block;margin-bottom:4px">Dressing you…</strong>
+    <div class="hint" style="margin:0 0 12px">Usually 15–30 seconds, up to a minute for a full outfit. Keep your screen on.</div>
+    <ol id="workSteps"><li>Reading the items</li><li>Matching them to your photo</li><li>Dressing you</li><li>Adding folds and shadows</li></ol>
+    <button class="btn ghost" id="cancel">Cancel</button>
+  </div>
+
+  <div class="card" id="resCard" style="display:none">
+    <p class="step">Your look</p>
     <div class="cmp" id="cmp" style="--cut:50%">
       <img id="bImg" alt="Before"><img id="rImg" class="after" alt="Try-on result">
-      <div class="bar"></div><span class="tag" style="left:10px">BEFORE</span><span class="tag" style="right:10px">AFTER</span>
+      <div class="bar"></div><span class="tag" style="left:12px">BEFORE</span><span class="tag" style="right:12px">AFTER</span><span class="ai">AI-generated preview</span>
       <input type="range" id="cut" min="0" max="100" value="50" aria-label="Compare before and after">
     </div>
-    <div class="row" style="margin-top:10px">
-      <button class="btn sm" id="useBase">👕 Keep & add more on top</button>
-      <button class="btn sm" id="undoBase" style="display:none">↩ Back to original photo</button>
-      <a class="btn sm" id="dl" download="fitting-room.png">⬇️ Save image</a>
-      <button class="btn sm" id="again">🔁 Regenerate</button>
+    <div class="acts">
+      <button class="btn primary" id="dl"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Save</button>
+      <button class="btn" id="again"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5l2-2v6h-6l2-2a5 5 0 1 0 1 6"/></svg>Try again</button>
+      <button class="btn" id="share"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 12v7h16v-7M12 3v12M7 8l5-5 5 5"/></svg>Share</button>
     </div>
-    <p class="hint" id="rText"></p>
+    <p class="hint" style="text-align:center">Not quite you? Tap Try again — it usually lands on the second go.</p>
+    <div class="links">
+      <button id="useBase">Add another item over this look</button>
+      <button id="undoBase" style="display:none">Back to original photo</button>
+      <a href="/report.html">Report this image</a>
+    </div>
+    <details id="seen" style="display:none"><summary>What we saw</summary><div id="rText"></div></details>
   </div>
 
   <div class="card" id="looksCard" style="display:none">
-    <h2>Saved looks (this session)</h2>
+    <p class="step">Recent looks · kept on this phone for 24 hours</p>
     <div class="looks" id="looks"></div>
   </div>
+
+  <footer><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/report.html">Report a photo</a><span style="min-height:44px;display:inline-flex;align-items:center">18+ only</span></footer>
 </div>
 
 <input class="fi" type="file" id="f-person" accept="image/*">
-<input class="fi" type="file" id="f-person-cam" accept="image/*" capture="user">
+<input class="fi" type="file" id="f-person-cam" accept="image/*" capture>
 <input class="fi" type="file" id="f-cloth" accept="image/*" multiple>
 <input class="fi" type="file" id="f-cloth-cam" accept="image/*" capture="environment">
 <div class="modal" id="modal"><img id="mImg" alt=""></div>
@@ -124,7 +168,13 @@
 <script>
 const $=id=>document.getElementById(id);
 const S={person:null, original:null, items:[], looks:[]};
-const LS=(k,v)=>{try{ if(v===undefined) return JSON.parse(localStorage.getItem(k)); localStorage.setItem(k,JSON.stringify(v)); }catch{ return null; }};
+const DAY=864e5, LS=(k,v)=>{try{ if(v===undefined) return JSON.parse(localStorage.getItem(k)); localStorage.setItem(k,JSON.stringify(v)); }catch{ return null; }};
+
+// --- tiny IndexedDB session store (survives the iOS camera reload) ---
+const DB={open(){return new Promise((res,rej)=>{const r=indexedDB.open('otr',1); r.onupgradeneeded=()=>r.result.createObjectStore('kv'); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error);});},
+  async get(k){try{const d=await this.open();return await new Promise((res,rej)=>{const q=d.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error);});}catch{return null}},
+  async set(k,v){try{const d=await this.open();await new Promise((res,rej)=>{const t=d.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=res;t.onerror=()=>rej(t.error);});}catch{}}};
+const saveSession=()=>DB.set('session',{at:Date.now(),person:S.person,original:S.original,items:S.items.map(i=>({url:i.url,data:i.data,mime:i.mime,on:i.on}))});
 
 async function fileToJpeg(file, max=1024){
   let bmp; try{ bmp=await createImageBitmap(file); }catch{
@@ -133,51 +183,80 @@ async function fileToJpeg(file, max=1024){
   const c=document.createElement('canvas'); c.width=Math.round(w*k); c.height=Math.round(h*k); c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);
   const url=c.toDataURL('image/jpeg',0.88); return {url, data:url.split(',')[1], mime:'image/jpeg'};
 }
-const status=(m,bad)=>{const e=$('status'); e.style.display=m?'block':'none'; e.innerHTML=m; e.className='status'+(bad?' bad':'');};
-const ready=()=>$('go').classList.toggle('off', !(S.person && S.items.some(i=>i.on)));
+const status=(html,bad)=>{const e=$('status'); e.style.display=html?'block':'none'; e.innerHTML=html; e.className='status'+(bad?' bad':''); if(html&&!bad) {} };
+const consented=()=>$('consent').checked;
+function ready(){ const ok=!!(S.person && consented() && S.items.some(i=>i.on)); $('go').classList.toggle('off',!ok); $('goHint').style.display=ok?'none':'block'; }
+function showPerson(){ if(!S.person) return; $('pImg').src=S.person.url; $('drop').classList.add('has'); }
 
 async function onPerson(e){ const f=e.target.files&&e.target.files[0]; e.target.value=''; if(!f) return;
-  try{ S.person=await fileToJpeg(f,1280); S.original=S.person; $('undoBase').style.display='none'; $('pImg').src=S.person.url; $('pImg').style.display='block'; status(''); }catch{ status("Couldn't open that photo. If it's an iPhone HEIC, set Settings → Camera → Formats → Most Compatible.",true); } ready(); }
-async function onCloth(e){ const fs=[...(e.target.files||[])]; e.target.value=''; for(const f of fs){ try{ const j=await fileToJpeg(f,1024); S.items.push({...j,on:true}); }catch{ status("Couldn't open one of the photos.",true);} } renderTray(); ready(); }
+  try{ S.person=await fileToJpeg(f,1280); S.original=S.person; $('undoBase').style.display='none'; showPerson(); status(''); saveSession(); }
+  catch{ status("Couldn't open that photo. Take it again, or if it's an iPhone HEIC set Settings → Camera → Formats → Most Compatible.",true); } ready(); }
+async function onCloth(e){ const fs=[...(e.target.files||[])]; e.target.value=''; for(const f of fs){ try{ const j=await fileToJpeg(f,1024); S.items.push({...j,on:true}); }catch{ status("Couldn't open one of the photos. Take it again or pick a different one.",true);} } renderTray(); ready(); saveSession(); }
 ['f-person','f-person-cam'].forEach(id=>$(id).addEventListener('change',onPerson));
 ['f-cloth','f-cloth-cam'].forEach(id=>$(id).addEventListener('change',onCloth));
 
 function renderTray(){ const t=$('tray'); t.innerHTML='';
-  S.items.forEach(it=>{ const d=document.createElement('div'); d.className='item'+(it.on?' on':''); d.innerHTML=`<img src="${it.url}"><span class="chk">✓ wear</span><button class="x">✕</button>`;
-    d.onclick=()=>{it.on=!it.on; renderTray(); ready();}; d.querySelector('.x').onclick=ev=>{ev.stopPropagation(); S.items=S.items.filter(x=>x!==it); renderTray(); ready();}; t.appendChild(d); }); }
+  $('trayHint').textContent=S.items.length?'Tap items to wear them together — a top and jeans, plus a jacket.':'On a hanger, on a rack, flat, or on a mannequin — all work. Snap a top and jeans and they go on together.';
+  S.items.forEach((it,n)=>{ const d=document.createElement('div'); d.className='item'+(it.on?' on':''); d.setAttribute('role','button'); d.setAttribute('aria-pressed',it.on); d.setAttribute('aria-label','Item '+(n+1)+(it.on?', selected':''));
+    d.innerHTML=`<img src="${it.url}" alt=""><span class="chk">Wearing</span><button class="x" aria-label="Remove item"><span>×</span></button>`;
+    d.onclick=()=>{it.on=!it.on; renderTray(); ready(); saveSession();}; d.querySelector('.x').onclick=ev=>{ev.stopPropagation(); S.items=S.items.filter(x=>x!==it); renderTray(); ready(); saveSession();}; t.appendChild(d); }); }
 
-let lastResult=null;
+let lastResult=null, ac=null;
+const ERR={setup:'We\'re doing maintenance. Try again in a few minutes.',
+  noimage:'We couldn\'t make that one. Try a clearer full-body photo, or a flatter photo of the item.',
+  timeout:'That one took too long. Tap Try again — it usually works on the second go.',
+  blocked:null, generic:'Something went wrong on our end. Tap Try again. If it keeps happening, try a different photo.'};
+function blocked(msg){ status('<strong>We can\'t make this one.</strong><br>'+(msg||'This request isn\'t something we\'ll generate.')+'<br>We dress real people, 18 and over, with their clothes on.<br><a class="btn ghost" href="/report.html">Report a problem</a> <button class="btn ghost" id="startOver">Start over</button>',true); $('startOver').onclick=startOver; }
+function startOver(){ S.person=S.original=null; S.items=[]; $('drop').classList.remove('has'); $('pImg').removeAttribute('src'); renderTray(); status(''); $('resCard').style.display='none'; DB.set('session',null); ready(); window.scrollTo({top:0,behavior:'smooth'}); }
+
 async function tryOn(){
-  const garments=S.items.filter(i=>i.on).map(i=>({data:i.data,mime:i.mime})); if(!S.person||!garments.length) return;
-  $('go').disabled=true; status('');
-  const steps=['Reading the garment…','Matching it to your photo…','Dressing you…','Adding folds and shadows…','Almost there…','Still working — big outfits take up to a minute…']; let si=0;
-  $('go').innerHTML='<span class="spin"></span> '+steps[0]; const tick=setInterval(()=>{ si=Math.min(si+1,steps.length-1); $('go').innerHTML='<span class="spin"></span> '+steps[si]; },3500);
+  const sel=S.items.filter(i=>i.on), garments=sel.map(i=>({data:i.data,mime:i.mime})); if(!S.person||!garments.length||!consented()) return;
+  status(''); $('resCard').style.display='none'; $('go').disabled=true;
+  $('workThumbs').innerHTML=sel.map(i=>`<img src="${i.url}" alt="">`).join(''); const lis=[...$('workSteps').children]; lis.forEach(l=>l.className=''); lis[0].className='on';
+  $('work').classList.add('on'); $('work').scrollIntoView({behavior:'smooth',block:'center'});
+  let si=0; const tick=setInterval(()=>{ if(si<lis.length-1){ lis[si].className='done'; si++; lis[si].className='on'; } },6000);
   try{
-    const ac=new AbortController(); const kill=setTimeout(()=>ac.abort(),115000);
+    ac=new AbortController(); const kill=setTimeout(()=>ac.abort('timeout'),115000);
     const r=await fetch('/api/tryon',{method:'POST',headers:{'content-type':'application/json'},signal:ac.signal,body:JSON.stringify({person:{data:S.person.data,mime:S.person.mime},garments,note:$('note').value.trim()})}).finally(()=>clearTimeout(kill));
     const j=await r.json().catch(()=>({}));
-    if(!r.ok){ status(j.error==='setup' ? '⚙️ <b>Setup needed:</b> '+j.message : '❌ '+(j.message||j.error||('HTTP '+r.status)), true); }
-    else { lastResult=j.image; $('rImg').src=j.image; $('bImg').src=S.person.url; $('cmp').style.setProperty('--cut','50%'); $('cut').value=50; $('dl').href=j.image; $('rText').textContent=(j.plan&&j.plan.garments)?('Understood: '+j.plan.garments.map(g=>'#'+g.n+' '+g.type+' — '+g.description).join(' | ')):(j.text||''); $('resCard').style.display='block';
-      S.looks.push(j.image); if(S.looks.length>6) S.looks.shift(); LS('otr.looks',S.looks); renderLooks(); $('resCard').scrollIntoView({behavior:'smooth'}); }
-  }catch(err){ status(err.name==='AbortError' ? '⏱️ That one took too long. Tap Regenerate — it usually works on the second try.' : '❌ Network error: '+err.message,true); }
-  clearInterval(tick); $('go').disabled=false; $('go').textContent='✨ Try it on';
+    if(!r.ok){ if(j.error==='setup') console.warn(j.message); if(j.error==='blocked') blocked(j.message); else status((ERR[j.error]||ERR.generic)+' <button class="btn ghost" id="retry">Try again</button>',true), $('retry').onclick=tryOn; }
+    else { lastResult=j.image; $('rImg').src=j.image; $('bImg').src=S.person.url; $('cmp').style.setProperty('--cut','50%'); $('cut').value=50;
+      const seen=(j.plan&&j.plan.garments)?j.plan.garments.map(g=>g.description||g.type).join(', '):(j.text||''); $('rText').textContent=seen?('Wearing: '+seen):''; $('seen').style.display=seen?'block':'none';
+      $('resCard').style.display='block'; pushLook(j.image); $('resCard').scrollIntoView({behavior:'smooth'}); }
+  }catch(err){ if(ac.signal.aborted) status(ac.signal.reason==='cancel'?'Cancelled.':ERR.timeout+' <button class="btn ghost" id="retry">Try again</button>',true); else status('No connection. Check your signal and tap Try again. <button class="btn ghost" id="retry">Try again</button>',true); const b=$('retry'); if(b) b.onclick=tryOn; }
+  clearInterval(tick); $('work').classList.remove('on'); $('go').disabled=false; ac=null;
 }
-$('go').onclick=tryOn; $('again').onclick=tryOn;
-$('useBase').onclick=()=>{ if(!lastResult) return; $('undoBase').style.display='inline-flex'; S.person={url:lastResult,data:lastResult.split(',')[1],mime:lastResult.slice(5,lastResult.indexOf(';'))}; $('pImg').src=lastResult; S.items.forEach(i=>i.on=false); renderTray(); ready(); status('Result is now the base photo — select the next item(s) and try on again.'); window.scrollTo({top:0,behavior:'smooth'}); };
-function renderLooks(){ $('looksCard').style.display=S.looks.length?'block':'none'; const g=$('looks'); g.innerHTML=''; S.looks.forEach(u=>{ const im=new Image(); im.src=u; im.onclick=()=>{$('mImg').src=u; $('modal').classList.add('on');}; g.appendChild(im); }); }
-$('modal').onclick=()=>$('modal').classList.remove('on');
-$('undoBase').onclick=()=>{ if(!S.original) return; S.person=S.original; $('pImg').src=S.original.url; $('undoBase').style.display='none'; status('Back to your original photo.'); ready(); };
+$('go').onclick=tryOn; $('again').onclick=tryOn; $('cancel').onclick=()=>ac&&ac.abort('cancel');
+$('useBase').onclick=()=>{ if(!lastResult) return; $('undoBase').style.display='inline'; S.person={url:lastResult,data:lastResult.split(',')[1],mime:lastResult.slice(5,lastResult.indexOf(';'))}; showPerson(); S.items.forEach(i=>i.on=false); renderTray(); ready(); saveSession(); status('This look is now your photo. Pick the next item and tap Try it on.'); window.scrollTo({top:0,behavior:'smooth'}); };
+$('undoBase').onclick=()=>{ if(!S.original) return; S.person=S.original; showPerson(); $('undoBase').style.display='none'; status('Back to your original photo.'); ready(); saveSession(); };
 $('cut').oninput=e=>$('cmp').style.setProperty('--cut',e.target.value+'%');
+$('consent').onchange=()=>{ LS('otr.consent',$('consent').checked?Date.now():0); ready(); };
+
+// --- export with a baked-in provenance strip ---
+async function stamped(url){ const im=new Image(); im.src=url; await im.decode(); const c=document.createElement('canvas'); c.width=im.width; c.height=im.height; const g=c.getContext('2d'); g.drawImage(im,0,0);
+  const h=Math.max(28,Math.round(im.height*0.045)); g.fillStyle='rgba(107,101,94,.92)'; g.fillRect(0,im.height-h,im.width,h); g.fillStyle='#fff'; g.font=`600 ${Math.round(h*0.5)}px Manrope, sans-serif`; g.textBaseline='middle'; g.fillText('AI preview · Off the Rack',Math.round(h*0.5),im.height-h/2);
+  return new Promise(res=>c.toBlob(res,'image/png')); }
+$('dl').onclick=async()=>{ if(!lastResult) return; const b=await stamped(lastResult); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='off-the-rack.png'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),5000); };
+$('share').onclick=async()=>{ if(!lastResult) return; const b=await stamped(lastResult); const f=new File([b],'off-the-rack.png',{type:'image/png'});
+  if(navigator.canShare&&navigator.canShare({files:[f]})){ try{ await navigator.share({files:[f],title:'Off the Rack'}); }catch{} } else $('dl').click(); };
+
+// --- recent looks, 24 h on this phone ---
+function pushLook(src){ S.looks.push({src,at:Date.now()}); if(S.looks.length>6) S.looks.shift(); LS('otr.looks',S.looks); renderLooks(); }
+function renderLooks(){ $('looksCard').style.display=S.looks.length?'block':'none'; const g=$('looks'); g.innerHTML=''; S.looks.forEach(l=>{ const im=new Image(); im.src=l.src; im.alt='Recent look'; im.onclick=()=>{$('mImg').src=l.src; $('modal').classList.add('on');}; g.appendChild(im); }); }
+$('modal').onclick=()=>$('modal').classList.remove('on');
+(()=>{ const saved=LS('otr.looks'); if(Array.isArray(saved)){ S.looks=saved.filter(l=>l&&l.src&&Date.now()-l.at<DAY); LS('otr.looks',S.looks); renderLooks(); } })();
+// consent remembered 30 days
+(()=>{ const at=LS('otr.consent'); if(at&&Date.now()-at<30*DAY){ $('consent').checked=true; $('consentWhen').textContent='Confirmed on '+new Date(at).toLocaleDateString(); $('consentWhen').style.display='block'; } ready(); })();
+// restore an in-progress session (2 h)
+(async()=>{ const s=await DB.get('session'); if(s&&Date.now()-s.at<2*36e5){ S.person=s.person; S.original=s.original||s.person; S.items=s.items||[]; showPerson(); renderTray(); ready(); } })();
 // tips card (once)
 if(LS('otr.tips')) $('tips').style.display='none';
 $('tipsX').onclick=()=>{ $('tips').style.display='none'; LS('otr.tips',1); };
-// looks survive refresh
-(()=>{ const saved=LS('otr.looks'); if(Array.isArray(saved)&&saved.length){ S.looks=saved; renderLooks(); } })();
-// add to home screen
-(()=>{ const standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone; if(standalone||LS('otr.install')) return;
+// add to home screen — only after the first look
+(()=>{ const standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone; if(standalone||LS('otr.install')||!(LS('otr.looks')||[]).length) return;
   const ios=/iphone|ipad|ipod/i.test(navigator.userAgent); let deferred=null;
   window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); deferred=e; $('installMsg').textContent='Add Off the Rack to your home screen for one-tap try-ons.'; $('install').classList.add('on'); });
-  if(ios){ $('installMsg').textContent='Add to Home Screen: tap Share, then “Add to Home Screen”.'; $('installBtn').style.display='none'; $('install').classList.add('on'); }
+  if(ios){ $('installMsg').textContent='Tap Share, then Add to Home Screen.'; $('installBtn').style.display='none'; $('install').classList.add('on'); }
   $('installBtn').onclick=async()=>{ if(deferred){ deferred.prompt(); await deferred.userChoice; } $('install').classList.remove('on'); LS('otr.install',1); };
   $('installX').onclick=()=>{ $('install').classList.remove('on'); LS('otr.install',1); };
 })();
