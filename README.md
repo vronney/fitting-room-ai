@@ -5,8 +5,8 @@ Snap yourself. Snap anything on the rack. See yourself wearing it in ~15 seconds
 **Status:** MVP live on Vercel (`fitting-room-ai`). Phase 1 = make it sellable: accounts, consent/safety, quotas, Stripe, landing page.
 
 ## Stack
-- `public/index.html` — single-file mobile web app (camera/library inputs, garment tray, result + saved looks)
-- `public/landing/index.html` — marketing landing page, served at `/landing` (CSS-only animations, before/after slider; CTAs link to the app at `/`)
+- `public/index.html` — marketing landing page at `/` (CSS-only animations, before/after slider; every CTA goes to `/app`)
+- `public/app/index.html` — the single-file mobile web app at `/app` (camera/library inputs, garment tray, result + saved looks); PWA `start_url` points here
 - `api/tryon.js` — Vercel serverless function. Two-step Gemini pipeline: (1) text model describes current outfit + each garment as JSON, (2) image model edits the person photo with explicit replace instructions
 - `vercel.json` — 60 s function timeout, 1 GB memory
 
