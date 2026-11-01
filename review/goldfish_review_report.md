@@ -1,3 +1,5 @@
+Status: resolved — 24 fixes applied in PR #4 (merged 5f938d0); 1 escalation decided (pricing A); 1 contested (README timeout line, corrected); 6 nits declined.
+
 # Goldfish Annotated Review Report
 
 **Target:** `design/Main.dc.html`, `design/App-You.dc.html`, `design/App-Clothes.dc.html`, `design/App-Result.dc.html`, `design/Style.dc.html`, `public/index.html`, `public/manifest.json` (`full file`)
