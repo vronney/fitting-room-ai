@@ -7,6 +7,7 @@ Snap yourself. Snap anything on the rack. See yourself wearing it in under a min
 ## Stack
 - `public/index.html` — marketing landing page at `/` (CSS-only animations, before/after slider; every CTA goes to `/app`)
 - `public/app/index.html` — the single-file mobile web app at `/app` (camera/library inputs, garment tray, result + saved looks); PWA `start_url` points here
+- `api/_looks.js`, `api/looks.js` — looks counter on Neon Postgres (`devices`, `looks`): 3 free per device, paid credits, `unlimited_until` for Founding 10, global daily cap
 - `api/tryon.js` — Vercel serverless function. Two-step Gemini pipeline: (1) text model describes current outfit + each garment as JSON, (2) image model edits the person photo with explicit replace instructions
 - `vercel.json` — 120 s function timeout, 1 GB memory
 
@@ -27,3 +28,10 @@ Push to `main` → Vercel auto-deploys (once the repo is connected), or `vercel 
 
 ## Safety posture (non-negotiable)
 Dresses people, never undresses them. 18+ and consent attestation, input + output moderation, prompt sanitizer, 24 h deletion, 48 h takedown. See `docs/blueprint-summary.md`.
+
+## Founding 10 (manual, until Stripe)
+A customer emails from the app; the mail body carries their device id. Grant a year:
+```sql
+UPDATE devices SET unlimited_until = now() + interval '1 year' WHERE id = '<device id>';
+```
+Grant a 20-pack: `UPDATE devices SET paid_left = paid_left + 20 WHERE id = '<device id>';`

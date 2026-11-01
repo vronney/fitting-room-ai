@@ -18,7 +18,7 @@ Atelier system (see `Style.dc.html`): Bone / Linen / Ink / Stone / Merlot / Cham
 | Credits added | `App-Credited.dc.html` | Stripe return URL | App-Clothes (session preserved) |
 | Privacy / Terms / Report | `public/privacy.html`, `terms.html`, `report.html` | footer, Result, Blocked | — |
 
-Counter model: the pill always shows **looks remaining** ("3 LOOKS LEFT"), never looks used. **A look is every request that returns an image — Try again included.** Cancel, errors and blocked requests do not consume a look. The counter itself is not built yet; today the only guard is a per-IP cap of 15/day inside `/api/tryon` (best-effort, per function instance).
+Counter model: the pill always shows **looks remaining** ("3 LOOKS LEFT"), never looks used. **A look is every request that returns an image — Try again included.** Cancel, errors and blocked requests do not consume a look. Built: Neon Postgres (`devices`, `looks`) behind `/api/looks` and `/api/tryon`; device id minted client-side (`otr.device`). Guards: per-device free looks (3), per-IP cap 15/day, global daily cap (`DAILY_GLOBAL_CAP`, default 400 ≈ $28/day).
 
 ## Pricing (launch — option A)
 
@@ -36,7 +36,7 @@ Free 3 → Founding 10 (a year unlimited for $39, by email — the only paid pat
 |---|---|
 | iOS Safari reloads the tab after the camera app returns | session persisted in IndexedDB (2 h) and restored; App-Credited returns to a preserved session |
 | Generation tail > 60 s (two production timeouts seen) | 120 s function limit, Working screen with honest range + Cancel, App-Error with Try again |
-| Free-funnel cost unbounded (~$0.07/look) | per-IP cap of 15/day in `/api/tryon` (live, best-effort); KV-backed device counter with the Stripe work (Phase 1 Week 3–4) |
+| Free-funnel cost unbounded (~$0.07/look) | per-device counter in Neon (3 free), per-IP cap 15/day, global daily cap 400 — all live in `/api/tryon` |
 | Face drift / "not me" results | "Not quite you? Try again" on Result; copy promises no filter, not a perfect likeness |
 | Misuse: photos of others, minors, undress prompts | 18+/it's-me gate on Step 1; Gemini safety thresholds set explicitly on both calls; description step flags minors / nudity / underwear and the request is refused before any image is generated; note sanitizer; App-Blocked; terms ban; `report.html` with 48 h removal |
 | Shared AI image passed off as real | "AI-generated preview" pill on screen and a provenance strip baked into every saved/shared PNG, **free and paid alike** (it is the control, not a watermark to sell off); Gemini SynthID |

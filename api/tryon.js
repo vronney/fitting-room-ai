@@ -1,6 +1,7 @@
 // POST /api/tryon  { person:{data,mime}, garments:[{data,mime}], note?:string }
 // -> { image:"data:image/png;base64,...", plan:{...}, model }
 export const config = { maxDuration: 120 };
+import { checkBudget, record, asJson, validDevice } from "./_looks.js";
 
 const IMG_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash-image";
 const TXT_MODEL = process.env.GEMINI_TEXT_MODEL || "gemini-2.5-flash";
@@ -49,13 +50,16 @@ export default async function handler(req, res) {
 
   let body = req.body;
   if (typeof body === "string") { try { body = JSON.parse(body); } catch { return res.status(400).json({ error: "bad json" }); } }
-  const { person, garments = [] } = body || {};
+  const { person, garments = [], device } = body || {};
   if (!person?.data || !garments.length) return res.status(400).json({ error: "Need a person photo and at least one garment." });
+  if (!validDevice(device)) return res.status(400).json({ error: "bad device", message: "Reload the page and try again." });
   if (garments.length > 4) return res.status(400).json({ error: "Up to 4 items at a time." });
   const ip = (req.headers["x-forwarded-for"] || "").split(",")[0].trim() || req.socket?.remoteAddress || "?";
 
+  let outcome = "error";
   try {
     ratelimit(ip);
+    await checkBudget(device);
     const note = cleanNote(body.note);
     // ---- Step 1: understand the inputs (cheap text call) ----
     const p1 = [
@@ -100,10 +104,15 @@ Output only the edited image.` }
     console.log(JSON.stringify({ evt: "tryon", model: IMG_MODEL, garments: garments.length, ms: Date.now() - t0 }));
     const im = out.find(p => p.inlineData || p.inline_data);
     const text = out.filter(p => p.text).map(p => p.text).join(" ").trim();
-    if (!im) return res.status(422).json({ error: "noimage", message: text || "Model returned no image. Try a clearer full-body photo or a flat garment photo." });
+    if (!im) { record(device, { outcome: "noimage", ip }).catch(() => {}); return res.status(422).json({ error: "noimage", message: text || "Model returned no image. Try a clearer full-body photo or a flat garment photo." }); }
     const d = im.inlineData || im.inline_data;
-    res.status(200).json({ image: `data:${d.mimeType || d.mime_type || "image/png"};base64,${d.data}`, text, plan, model: IMG_MODEL });
+    outcome = "ok";
+    const left = await record(device, { outcome, ms: Date.now() - t0, garments: garments.length, ip });
+    res.status(200).json({ image: `data:${d.mimeType || d.mime_type || "image/png"};base64,${d.data}`, text, plan, model: IMG_MODEL, looks: left ? asJson(left) : null });
   } catch (e) {
+    if (e.nolooks) return res.status(402).json({ error: "nolooks", message: "You've used your free looks.", looks: { left: 0 } });
+    if (e.global) { console.error("global daily cap hit"); return res.status(503).json({ error: "cap", message: "We're at today's limit for everyone. Try again tomorrow." }); }
+    record(device, { outcome: e.blocked ? "blocked" : e.timeout ? "timeout" : e.noperson ? "noperson" : "error", ip }).catch(() => {});
     if (e.blocked) { console.log(JSON.stringify({ evt: "blocked", why: e.message, ip })); return res.status(422).json({ error: "blocked", message: "This request isn't something we'll generate." }); }
     if (e.cap) return res.status(429).json({ error: "cap", message: "You've hit today's limit of 15 looks. Come back tomorrow." });
     if (e.noperson) return res.status(422).json({ error: "noimage", message: e.message });
