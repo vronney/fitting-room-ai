@@ -88,7 +88,7 @@
 <div class="wrap">
   <div class="top">
     <div class="brand"><svg width="26" height="26" viewBox="0 0 30 30" aria-hidden="true"><path d="M4 15 L15 4 H26 V15 L15 26 Z" fill="#7A2434"/><circle cx="21" cy="9" r="2" fill="#F7F4EF"/></svg>Off the Rack</div>
-    <span class="pill">Free preview</span>
+    <span class="pill" id="pill">Free preview</span>
   </div>
   <h1>Snap yourself. Snap the hanger. See it on you.</h1>
   <p class="sub">Your photos are never stored on our servers. Results stay on your phone for 24 hours unless you save them.</p>
@@ -168,6 +168,9 @@
 <script>
 const $=id=>document.getElementById(id);
 const S={person:null, original:null, items:[], looks:[]};
+const DEV=(()=>{let d=null;try{d=localStorage.getItem('otr.device')}catch{} if(!d||!/^[a-z0-9-]{16,64}$/.test(d)){d=(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2,12)).toLowerCase();try{localStorage.setItem('otr.device',d)}catch{}} return d;})();
+let LOOKS={left:null,unlimited:true};
+function setLooks(l){ if(!l) return; LOOKS=l; const p=$('pill'); if(l.unlimited||l.left==null) p.textContent='Free preview'; else p.textContent=l.left+(l.left===1?' LOOK LEFT':' LOOKS LEFT'); if(!l.unlimited&&l.left===0) noLooks(); }
 const DAY=864e5, LS=(k,v)=>{try{ if(v===undefined) return JSON.parse(localStorage.getItem(k)); localStorage.setItem(k,JSON.stringify(v)); }catch{ return null; }};
 
 // --- tiny IndexedDB session store (survives the iOS camera reload) ---
@@ -185,7 +188,7 @@ async function fileToJpeg(file, max=1024){
 }
 const status=(html,bad)=>{const e=$('status'); e.style.display=html?'block':'none'; e.innerHTML=html; e.className='status'+(bad?' bad':''); if(html&&!bad) {} };
 const consented=()=>$('consent').checked;
-function ready(){ const ok=!!(S.person && consented() && S.items.some(i=>i.on)); $('go').classList.toggle('off',!ok); $('goHint').style.display=ok?'none':'block'; }
+function ready(){ const ok=!!(S.person && consented() && S.items.some(i=>i.on)) && !(LOOKS&&!LOOKS.unlimited&&LOOKS.left===0); $('go').classList.toggle('off',!ok); $('goHint').style.display=ok?'none':'block'; }
 function showPerson(){ if(!S.person) return; $('pImg').src=S.person.url; $('drop').classList.add('has'); }
 
 async function onPerson(e){ const f=e.target.files&&e.target.files[0]; e.target.value=''; if(!f) return;
@@ -208,6 +211,7 @@ const ERR={setup:'We\'re doing maintenance. Try again in a few minutes.',
   cap:'You\'ve hit today\'s limit of 15 looks. Come back tomorrow.',
   blocked:null, generic:'Something went wrong on our end. Tap Try again. If it keeps happening, try a different photo.'};
 function blocked(msg){ status('<strong>We can\'t make this one.</strong><br>'+(msg||'This request isn\'t something we\'ll generate.')+'<br>We dress real people, 18 and over, with their clothes on.<br><a class="btn ghost" href="/report.html">Report a problem</a> <button class="btn ghost" id="startOver">Start over</button>',true); $('startOver').onclick=startOver; }
+function noLooks(){ status('<strong>You\'ve used your 3 free looks.</strong><br>Your looks are still on this phone for 24 hours — save the ones you want.<br><br><strong>Founding 10:</strong> the first 10 shoppers get a year of unlimited looks for $39. <a class="btn ghost" href="mailto:hello@offtherack.app?subject=Founding%2010&body=Device%20'+DEV+'">Email us</a><br><span class="hint">Packs of 20 for $5.99 are coming soon.</span>',false); $('go').classList.add('off'); $('goHint').style.display='none'; }
 function startOver(){ S.person=S.original=null; S.items=[]; $('drop').classList.remove('has'); $('pImg').removeAttribute('src'); renderTray(); status(''); $('resCard').style.display='none'; DB.set('session',null); ready(); window.scrollTo({top:0,behavior:'smooth'}); }
 
 async function tryOn(){
@@ -218,12 +222,12 @@ async function tryOn(){
   let si=0; const tick=setInterval(()=>{ if(si<lis.length-1){ lis[si].className='done'; si++; lis[si].className='on'; } },6000);
   try{
     ac=new AbortController(); const kill=setTimeout(()=>ac.abort('timeout'),115000);
-    const r=await fetch('/api/tryon',{method:'POST',headers:{'content-type':'application/json'},signal:ac.signal,body:JSON.stringify({person:{data:S.person.data,mime:S.person.mime},garments,note:$('note').value.trim()})}).finally(()=>clearTimeout(kill));
+    const r=await fetch('/api/tryon',{method:'POST',headers:{'content-type':'application/json'},signal:ac.signal,body:JSON.stringify({device:DEV,person:{data:S.person.data,mime:S.person.mime},garments,note:$('note').value.trim()})}).finally(()=>clearTimeout(kill));
     const j=await r.json().catch(()=>({}));
-    if(!r.ok){ if(j.error==='setup') console.warn(j.message); if(j.error==='blocked') blocked(j.message); else if(j.error==='cap') status(ERR.cap,true); else status((ERR[j.error]||ERR.generic)+' <button class="btn ghost" id="retry">Try again</button>',true), $('retry').onclick=tryOn; }
+    if(!r.ok){ if(j.error==='setup') console.warn(j.message); if(j.error==='blocked') blocked(j.message); else if(j.error==='nolooks') setLooks({left:0,unlimited:false}); else if(j.error==='cap') status(j.message||ERR.cap,true); else status((ERR[j.error]||ERR.generic)+' <button class="btn ghost" id="retry">Try again</button>',true), $('retry').onclick=tryOn; }
     else { lastResult=j.image; $('rImg').src=j.image; $('bImg').src=S.person.url; $('cmp').style.setProperty('--cut','50%'); $('cut').value=50;
       const seen=(j.plan&&j.plan.garments)?j.plan.garments.map(g=>g.description||g.type).join(', '):(j.text||''); $('rText').textContent=seen?('Wearing: '+seen):''; $('seen').style.display=seen?'block':'none';
-      $('resCard').style.display='block'; pushLook(j.image); $('resCard').scrollIntoView({behavior:'smooth'}); }
+      setLooks(j.looks); $('resCard').style.display='block'; pushLook(j.image); $('resCard').scrollIntoView({behavior:'smooth'}); }
   }catch(err){ if(ac.signal.aborted) status(ac.signal.reason==='cancel'?'Cancelled.':ERR.timeout+' <button class="btn ghost" id="retry">Try again</button>',true); else status('No connection. Check your signal and tap Try again. <button class="btn ghost" id="retry">Try again</button>',true); const b=$('retry'); if(b) b.onclick=tryOn; }
   clearInterval(tick); $('work').classList.remove('on'); $('go').disabled=false; ac=null;
 }
@@ -248,6 +252,8 @@ $('modal').onclick=()=>$('modal').classList.remove('on');
 (()=>{ const saved=LS('otr.looks'); if(Array.isArray(saved)){ S.looks=saved.filter(l=>l&&l.src&&Date.now()-l.at<DAY); LS('otr.looks',S.looks); renderLooks(); } })();
 // consent remembered for the 2 h session only
 (()=>{ const at=LS('otr.consent'); if(at&&Date.now()-at<2*36e5){ $('consent').checked=true; $('consentWhen').textContent='Confirmed on '+new Date(at).toLocaleDateString(); $('consentWhen').style.display='block'; } ready(); })();
+// looks remaining for this device
+fetch('/api/looks?device='+DEV).then(r=>r.json()).then(setLooks).catch(()=>{});
 // restore an in-progress session (2 h)
 (async()=>{ const s=await DB.get('session'); if(s&&Date.now()-s.at<2*36e5){ S.person=s.person; S.original=s.original||s.person; S.items=s.items||[]; showPerson(); renderTray(); ready(); } })();
 // tips card (once)
