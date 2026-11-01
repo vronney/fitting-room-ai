@@ -6,6 +6,7 @@ Snap yourself. Snap anything on the rack. See yourself wearing it in ~15 seconds
 
 ## Stack
 - `public/index.html` — single-file mobile web app (camera/library inputs, garment tray, result + saved looks)
+- `public/landing/index.html` — marketing landing page, served at `/landing` (CSS-only animations, before/after slider; CTAs link to the app at `/`)
 - `api/tryon.js` — Vercel serverless function. Two-step Gemini pipeline: (1) text model describes current outfit + each garment as JSON, (2) image model edits the person photo with explicit replace instructions
 - `vercel.json` — 60 s function timeout, 1 GB memory
 
@@ -21,7 +22,7 @@ Push to `main` → Vercel auto-deploys (once the repo is connected), or `vercel 
 
 ## Docs
 - `docs/blueprint-summary.md` — pricing, unit economics, safety/legal, competitor wedge (distilled)
-- `design/` — Design canvas artboards (landing page, app screens, style board) exported from Claude Design
+- `design/` — Design canvas artboards (landing page static + animated `Motion.dc.html`, app screens, style board) exported from Claude Design
 - Full blueprint: https://claude.ai/artifact/8jaP9Uv2NysuQybwxF3kes
 
 ## Safety posture (non-negotiable)

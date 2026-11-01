@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Off the Rack — animated landing sections</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&amp;family=Manrope:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#F7F4EF}
+a{color:#7A2434}a:hover{color:#5C1A27}
+
+/* One 9s story, three 3s beats: snap you → snap hanger → see it on you.
+   Every phase uses the same keyframe; the delay picks the beat. */
+@keyframes otr-on{0%{opacity:0}3%,31%{opacity:1}35%,100%{opacity:0}}
+@keyframes otr-card{0%,31%{transform:translateY(-8px);border-color:#7A2434;box-shadow:0 18px 40px rgba(122,36,52,0.16)}36%,97%{transform:none;border-color:#E3DDD4;box-shadow:0 8px 24px rgba(26,25,23,0.05)}100%{transform:translateY(-8px);border-color:#7A2434}}
+@keyframes otr-badge{0%,31%{background:#7A2434}36%,97%{background:#1A1917}100%{background:#7A2434}}
+@keyframes otr-bar{0%{transform:scaleX(0)}31%{transform:scaleX(1)}35%,100%{transform:scaleX(1);opacity:0}}
+@keyframes otr-flash{0%,13%{opacity:0}15%{opacity:0.9}20%,100%{opacity:0}}
+@keyframes otr-frame{0%,12%{transform:scale(1.04)}16%,100%{transform:scale(1)}}
+@keyframes otr-drop{0%{transform:translateY(-36px) rotate(-6deg);opacity:0}9%{transform:translateY(4px) rotate(2deg);opacity:1}13%,100%{transform:none;opacity:1}}
+@keyframes otr-reveal{0%,4%{clip-path:inset(0 0 100% 0)}20%,100%{clip-path:inset(0 0 0 0)}}
+@keyframes otr-scan{0%,4%{top:0;opacity:1}20%{top:100%;opacity:1}22%,100%{top:100%;opacity:0}}
+@keyframes otr-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes otr-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes otr-bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+@keyframes otr-rise{from{opacity:0;transform:translateY(48px)}to{opacity:1;transform:none}}
+@keyframes otr-draw{from{stroke-dashoffset:24}to{stroke-dashoffset:0}}
+
+.otr-ph{grid-area:1/1;opacity:0;animation:otr-on 9s linear infinite}
+.otr-b1{animation-delay:0s}
+.otr-b2{animation-delay:-6s}
+.otr-b3{animation-delay:-3s}
+.otr-flash{animation:otr-flash 9s linear infinite}
+.otr-frame{animation:otr-frame 9s ease-out infinite}
+.otr-drop{animation:otr-drop 9s cubic-bezier(.2,.8,.2,1) infinite;animation-delay:-6s}
+.otr-reveal{animation:otr-reveal 9s ease-in-out infinite;animation-delay:-3s}
+.otr-scan{animation:otr-scan 9s ease-in-out infinite;animation-delay:-3s}
+.otr-bar{transform-origin:left;animation:otr-bar 9s linear infinite}
+.otr-card{animation:otr-card 9s ease-in-out infinite}
+.otr-badge{animation:otr-badge 9s ease-in-out infinite}
+.otr-pulse{animation:otr-pulse 2.4s ease-in-out infinite}
+.otr-track{display:flex;width:max-content;animation:otr-marquee 28s linear infinite}
+.otr-bob{animation:otr-bob 4s ease-in-out infinite}
+.otr-lift{transition:transform .25s ease, box-shadow .25s ease}
+.otr-lift:hover{transform:translateY(-6px);box-shadow:0 20px 44px rgba(26,25,23,0.14)}
+.otr-check{stroke-dasharray:24;stroke-dashoffset:0}
+.otr-range{width:100%;accent-color:#7A2434;height:44px;cursor:ew-resize}
+
+/* Scroll reveals: only where the browser supports scroll-driven animation; otherwise content is simply visible. */
+@supports (animation-timeline: view()){
+.otr-rv{animation:otr-rise linear both;animation-timeline:view();animation-range:entry 0% cover 28%}
+.otr-check{animation:otr-draw linear both;animation-timeline:view();animation-range:entry 20% cover 35%}
+}
+
+@media (prefers-reduced-motion: reduce){
+*,*::before,*::after{animation:none !important;transition:none !important}
+.otr-b1.otr-ph{opacity:1}
+.otr-track{width:auto;flex-wrap:wrap;justify-content:center}
+.otr-dup{display:none !important}
+}
+</style>
+</helmet>
+<div style="font-family: 'Manrope', system-ui, sans-serif; color: #1A1917; background: #F7F4EF; min-height: 100vh; overflow-x: hidden">
+
+<header style="border-bottom: 1px solid #E3DDD4">
+<nav aria-label="Main" style="max-width: 1200px; margin: 0 auto; padding: 18px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<a href="#top" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #1A1917">
+<svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true" fill="none" stroke="#7A2434" stroke-width="1.5" stroke-linejoin="round"><path d="M4 15 L15 4 H26 V15 L15 26 Z" fill="#7A2434"></path><circle cx="21" cy="9" r="2" fill="#F7F4EF" stroke="none"></circle></svg>
+<span style="font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 22px; letter-spacing: -0.01em">Off the Rack</span>
+</a>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 24px; font-size: 15px; font-weight: 500">
+<a href="#how" style="color: #1A1917; text-decoration: none">How it works</a>
+<a href="#compare" style="color: #1A1917; text-decoration: none">See the difference</a>
+<a href="#pricing" style="color: #1A1917; text-decoration: none">Pricing</a>
+<a href="#start" style="background: #1A1917; color: #FFFFFF; text-decoration: none; padding: 12px 18px; border-radius: 999px; font-weight: 700; min-height: 44px; box-sizing: border-box; display: inline-flex; align-items: center">Try 3 looks free</a>
+</div>
+</nav>
+</header>
+
+<main id="top">
+<!-- 1 · HERO: the phone plays the whole try-on in a 9-second loop -->
+<section style="max-width: 1200px; margin: 0 auto; padding: 72px 24px 72px; display: flex; flex-wrap: wrap; gap: 48px; align-items: center">
+<div style="flex: 1 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+<span style="font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; background: #E9D7B8; color: #1A1917; padding: 7px 12px; border-radius: 999px; align-self: flex-start">The in-store try-on app</span>
+<h1 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(44px, 6vw, 76px); line-height: 1.04; letter-spacing: -0.015em">See it on you before the fitting-room line.</h1>
+<p style="margin: 0; font-size: 20px; line-height: 1.5; color: #6B655E; max-width: 540px">Snap the hanger. Snap yourself. See the whole outfit on your real body in about 15 seconds. Any rack, any store — thrift, resale, off-price, or your own closet.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+<a href="#start" class="otr-lift" style="background: #1A1917; color: #FFFFFF; border: 1px solid #1A1917; text-decoration: none; padding: 16px 26px; border-radius: 999px; font-weight: 700; font-size: 17px; box-shadow: 0 8px 24px rgba(26,25,23,0.12)">Try 3 looks free</a>
+<a href="#how" style="color: #1A1917; font-weight: 700; font-size: 16px; padding: 14px 8px">How it works →</a>
+</div>
+<p style="margin: 0; font-weight: 600; font-size: 13px; color: #6B655E">No card to start · Photos deleted in 24 hours · 18+</p>
+</div>
+
+<div style="flex: 1 1 380px; min-width: 0; display: flex; justify-content: center">
+<div role="img" aria-label="Animation: a phone takes a photo of you, then of a jacket on a hanger, then shows you wearing the jacket" style="position: relative; width: 320px; height: 600px; border: 1px solid #E3DDD4; border-radius: 40px; background: #FFFFFF; padding: 14px; box-sizing: border-box; box-shadow: 0 30px 60px rgba(26,25,23,0.14)">
+<div style="height: 100%; border-radius: 28px; background: #EFEAE3; display: flex; flex-direction: column; overflow: hidden">
+<div style="flex: 1; display: grid; padding: 14px; position: relative">
+
+<!-- beat 1: snap yourself -->
+<div class="otr-ph otr-b1" style="display: flex; flex-direction: column; gap: 10px">
+<div class="otr-frame" style="flex: 1; position: relative; border: 2px dashed #6B655E; border-radius: 18px; background: #E3DDD4; display: flex; align-items: flex-end; justify-content: center; overflow: hidden">
+<svg width="220" height="300" viewBox="0 0 300 375" aria-hidden="true"><circle cx="150" cy="82" r="36" fill="#C9BFB2"></circle><rect x="136" y="112" width="28" height="26" fill="#C9BFB2"></rect><path d="M92 152 Q150 128 208 152 L230 262 L204 268 L198 375 H102 L96 268 L70 262 Z" fill="#9C948A"></path></svg>
+<div class="otr-flash" style="position: absolute; inset: 0; background: #FFFFFF; opacity: 0"></div>
+</div>
+<span style="font-weight: 700; font-size: 13px; text-align: center; color: #1A1917">Snap yourself</span>
+</div>
+
+<!-- beat 2: snap the hanger -->
+<div class="otr-ph otr-b2" style="display: flex; flex-direction: column; gap: 10px">
+<div style="flex: 1; border-radius: 18px; background: #F7F4EF; border: 1px solid #E3DDD4; display: flex; align-items: center; justify-content: center">
+<svg class="otr-drop" width="200" height="260" viewBox="0 0 200 260" aria-hidden="true" fill="none" stroke-linejoin="round"><path d="M100 18 a12 12 0 1 1 12 12 c-6 0-12 5-12 11 v6" stroke="#6B655E" stroke-width="4" stroke-linecap="round"></path><path d="M100 47 L20 92 H180 Z" stroke="#6B655E" stroke-width="4"></path><path d="M44 92 L30 240 H86 L100 120 L114 240 H170 L156 92 Z" fill="#7A2434"></path><path d="M86 92 L100 132 L114 92" stroke="#E9D7B8" stroke-width="4"></path></svg>
+</div>
+<span style="font-weight: 700; font-size: 13px; text-align: center; color: #1A1917">Snap the hanger</span>
+</div>
+
+<!-- beat 3: see it on you -->
+<div class="otr-ph otr-b3" style="display: flex; flex-direction: column; gap: 10px">
+<div style="flex: 1; position: relative; border-radius: 18px; background: #E3DDD4; overflow: hidden; display: flex; align-items: flex-end; justify-content: center">
+<svg width="220" height="300" viewBox="0 0 300 375" aria-hidden="true"><circle cx="150" cy="82" r="36" fill="#C9BFB2"></circle><rect x="136" y="112" width="28" height="26" fill="#C9BFB2"></rect><path d="M92 152 Q150 128 208 152 L230 262 L204 268 L198 375 H102 L96 268 L70 262 Z" fill="#9C948A"></path></svg>
+<div class="otr-reveal" style="position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center">
+<svg width="220" height="300" viewBox="0 0 300 375" aria-hidden="true"><circle cx="150" cy="82" r="36" fill="#C9BFB2"></circle><rect x="136" y="112" width="28" height="26" fill="#C9BFB2"></rect><path d="M84 150 Q150 126 216 150 L244 300 L212 306 L208 375 H92 L88 306 L56 300 Z" fill="#7A2434"></path><path d="M128 140 L150 196 L172 140 L160 375 H140 Z" fill="#E9D7B8"></path><path d="M128 140 L150 196 L172 140" fill="none" stroke="#5C1A27" stroke-width="4"></path></svg>
+</div>
+<div class="otr-scan" style="position: absolute; left: 0; right: 0; top: 0; height: 3px; background: #E9D7B8; box-shadow: 0 0 18px 4px rgba(233,215,184,0.9)"></div>
+</div>
+<span style="font-weight: 700; font-size: 13px; text-align: center; color: #1A1917">You, wearing it</span>
+</div>
+
+</div>
+<div style="background: #1A1917; color: #FFFFFF; padding: 14px 16px 12px; font-weight: 600; font-size: 12px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between"><span>LOOK 1 OF 3</span><span>FREE</span></div>
+<div style="height: 3px; background: #3A3833; border-radius: 3px; overflow: hidden; display: grid">
+<div class="otr-bar otr-b1" style="grid-area: 1/1; background: #E9D7B8"></div>
+<div class="otr-bar otr-b2" style="grid-area: 1/1; background: #E9D7B8"></div>
+<div class="otr-bar otr-b3" style="grid-area: 1/1; background: #E9D7B8"></div>
+</div>
+</div>
+</div>
+<div class="otr-pulse" style="position: absolute; top: 120px; right: -34px; background: #7A2434; border-radius: 999px; padding: 10px 16px; font-weight: 600; font-size: 13px; letter-spacing: 0.1em; color: #FFFFFF">~15 SEC</div>
+</div>
+</div>
+</section>
+
+<!-- 2 · MARQUEE: where it works -->
+<div style="background: #1A1917; color: #F7F4EF; padding: 18px 0; font-weight: 600; font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; overflow: hidden">
+<div class="otr-track">
+<div style="display: flex; gap: 28px; padding-right: 28px; white-space: nowrap">
+<span>Thrift</span><span aria-hidden="true">/</span><span>Resale</span><span aria-hidden="true">/</span><span>Off-price</span><span aria-hidden="true">/</span><span>Your closet</span><span aria-hidden="true">/</span><span>Anything on a hanger</span><span aria-hidden="true">/</span><span>Thrift</span><span aria-hidden="true">/</span><span>Resale</span><span aria-hidden="true">/</span><span>Off-price</span><span aria-hidden="true">/</span><span>Your closet</span><span aria-hidden="true">/</span><span>Anything on a hanger</span><span aria-hidden="true">/</span>
+</div>
+<div class="otr-dup" aria-hidden="true" style="display: flex; gap: 28px; padding-right: 28px; white-space: nowrap">
+<span>Thrift</span><span>/</span><span>Resale</span><span>/</span><span>Off-price</span><span>/</span><span>Your closet</span><span>/</span><span>Anything on a hanger</span><span>/</span><span>Thrift</span><span>/</span><span>Resale</span><span>/</span><span>Off-price</span><span>/</span><span>Your closet</span><span>/</span><span>Anything on a hanger</span><span>/</span>
+</div>
+</div>
+</div>
+
+<!-- 3 · HOW IT WORKS: cards light up in sync with the hero phone -->
+<section id="how" style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; display: flex; flex-direction: column; gap: 40px">
+<div class="otr-rv" style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #6B655E">How it works</span>
+<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(34px, 4vw, 52px); letter-spacing: -0.015em; line-height: 1.08">Three taps, standing in the aisle.</h2>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px">
+<div class="otr-card otr-b1" style="background: #FFFFFF; border: 1px solid #E3DDD4; border-radius: 18px; padding: 28px; display: flex; flex-direction: column; gap: 14px">
+<span class="otr-badge otr-b1" style="font-weight: 700; font-size: 14px; background: #1A1917; color: #FFFFFF; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 999px">01</span>
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 26px">Snap yourself</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.55; color: #6B655E">One full-body photo. Busy store backgrounds are fine — we keep it on your phone's session, not a gallery.</p>
+</div>
+<div class="otr-card otr-b2" style="background: #FFFFFF; border: 1px solid #E3DDD4; border-radius: 18px; padding: 28px; display: flex; flex-direction: column; gap: 14px">
+<span class="otr-badge otr-b2" style="font-weight: 700; font-size: 14px; background: #1A1917; color: #FFFFFF; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 999px">02</span>
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 26px">Snap the hanger</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.55; color: #6B655E">On the rack, on a hanger, flat on a table. Add a top and jeans together and see the full outfit at once.</p>
+</div>
+<div class="otr-card otr-b3" style="background: #FFFFFF; border: 1px solid #E3DDD4; border-radius: 18px; padding: 28px; display: flex; flex-direction: column; gap: 14px">
+<span class="otr-badge otr-b3" style="font-weight: 700; font-size: 14px; background: #1A1917; color: #FFFFFF; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 999px">03</span>
+<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 26px">See it on you</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.55; color: #6B655E">Your body, your shape, unretouched. Keep it, toss it, or text it to a friend before you buy.</p>
+</div>
+</div>
+</section>
+
+<!-- 4 · BEFORE / AFTER: drag to compare -->
+<section id="compare" style="background: #EFEAE3">
+<div style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; display: flex; flex-wrap: wrap; gap: 48px; align-items: center">
+<div class="otr-rv" style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<span style="font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #6B655E">See the difference</span>
+<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(34px, 4vw, 52px); letter-spacing: -0.015em; line-height: 1.08">Same you. Different jacket.</h2>
+<p style="margin: 0; font-size: 18px; line-height: 1.55; color: #6B655E; max-width: 460px">Drag the handle. Your body, pose and shape stay exactly as they were — only the clothes change.</p>
+<p style="margin: 0; font-size: 14px; color: #6B655E">[Swap the illustration for a real before/after once you have a consented customer photo.]</p>
+</div>
+<div class="otr-rv" style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 14px; max-width: 480px">
+<div style="position: relative; aspect-ratio: 4 / 5; border-radius: 24px; overflow: hidden; background: #E3DDD4; box-shadow: 0 24px 50px rgba(26,25,23,0.12)">
+<div style="position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center">
+<svg width="100%" height="88%" viewBox="0 0 300 375" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Before: plain grey tee"><circle cx="150" cy="82" r="36" fill="#C9BFB2"></circle><rect x="136" y="112" width="28" height="26" fill="#C9BFB2"></rect><path d="M92 152 Q150 128 208 152 L230 262 L204 268 L198 375 H102 L96 268 L70 262 Z" fill="#9C948A"></path></svg>
+</div>
+<div style="position: absolute; inset: 0; background: #E9D7B8; display: flex; align-items: flex-end; justify-content: center; clip-path: inset(0 0 0 {{splitPct}})">
+<svg width="100%" height="88%" viewBox="0 0 300 375" preserveAspectRatio="xMidYMax meet" role="img" aria-label="After: burgundy jacket over a cream tee"><circle cx="150" cy="82" r="36" fill="#C9BFB2"></circle><rect x="136" y="112" width="28" height="26" fill="#C9BFB2"></rect><path d="M84 150 Q150 126 216 150 L244 300 L212 306 L208 375 H92 L88 306 L56 300 Z" fill="#7A2434"></path><path d="M128 140 L150 196 L172 140 L160 375 H140 Z" fill="#F7F4EF"></path><path d="M128 140 L150 196 L172 140" fill="none" stroke="#5C1A27" stroke-width="4"></path></svg>
+</div>
+<div aria-hidden="true" style="position: absolute; top: 0; bottom: 0; left: {{splitPct}}; width: 3px; margin-left: -1.5px; background: #FFFFFF; box-shadow: 0 0 12px rgba(26,25,23,0.3)">
+<div style="position: absolute; top: 50%; left: 50%; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 999px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(26,25,23,0.2)">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A1917" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 L3 12 L9 18 M15 6 L21 12 L15 18"></path></svg>
+</div>
+</div>
+<span style="position: absolute; top: 16px; left: 16px; background: #1A1917; color: #FFFFFF; font-weight: 700; font-size: 12px; letter-spacing: 0.1em; padding: 6px 10px; border-radius: 999px">BEFORE</span>
+<span style="position: absolute; top: 16px; right: 16px; background: #7A2434; color: #FFFFFF; font-weight: 700; font-size: 12px; letter-spacing: 0.1em; padding: 6px 10px; border-radius: 999px">AFTER</span>
+</div>
+<label for="otr-split" style="font-weight: 600; font-size: 14px; color: #1A1917">Compare before and after</label>
+<input id="otr-split" class="otr-range" type="range" min="0" max="100" value="{{split}}" onChange="{{setSplit}}">
+</div>
+</div>
+</section>
+
+<!-- 5 · WHY: cards rise in on scroll -->
+<section style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; display: flex; flex-direction: column; gap: 40px">
+<div class="otr-rv" style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #6B655E">Why it's different</span>
+<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(34px, 4vw, 52px); letter-spacing: -0.015em; line-height: 1.08">Built for the rack, not a catalog.</h2>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px">
+<div class="otr-rv otr-lift" style="background: #FFFFFF; border: 1px solid #E3DDD4; border-radius: 16px; padding: 24px; display: flex; gap: 14px; align-items: flex-start">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7A2434" stroke-width="2" aria-hidden="true" style="flex: none; margin-top: 2px"><path d="M3 12 L12 3 H21 V12 L12 21 Z"></path></svg>
+<div style="display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 18px">Anything on the rack</strong><span style="font-size: 15px; line-height: 1.5; color: #6B655E">Big try-on tools only work with their own catalog. This works with whatever you're holding.</span></div>
+</div>
+<div class="otr-rv otr-lift" style="background: #FFFFFF; border: 1px solid #E3DDD4; border-radius: 16px; padding: 24px; display: flex; gap: 14px; align-items: flex-start">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7A2434" stroke-width="2" aria-hidden="true" style="flex: none; margin-top: 2px"><circle cx="12" cy="7" r="4"></circle><path d="M4 21c1-4 4-6 8-6s7 2 8 6"></path></svg>
+<div style="display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 18px">Your real body</strong><span style="font-size: 15px; line-height: 1.5; color: #6B655E">No slimming, no smoothing, no swapped face. If it won't fit you, you should see that here first.</span></div>
+</div>
+<div class="otr-rv otr-lift" style="background: #FFFFFF; border: 1px solid #E3DDD4; border-radius: 16px; padding: 24px; display: flex; gap: 14px; align-items: flex-start">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7A2434" stroke-width="2" aria-hidden="true" style="flex: none; margin-top: 2px"><path d="M8 3 L4 7 V20 H20 V7 L16 3 C15 5 9 5 8 3 Z"></path></svg>
+<div style="display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 18px">The whole outfit at once</strong><span style="font-size: 15px; line-height: 1.5; color: #6B655E">Top, bottom and jacket together — not one piece at a time.</span></div>
+</div>
+<div class="otr-rv otr-lift" style="background: #FFFFFF; border: 1px solid #E3DDD4; border-radius: 16px; padding: 24px; display: flex; gap: 14px; align-items: flex-start">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7A2434" stroke-width="2" aria-hidden="true" style="flex: none; margin-top: 2px"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+<div style="display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 18px">Gone in 24 hours</strong><span style="font-size: 15px; line-height: 1.5; color: #6B655E">Your photos and results are deleted automatically. Save the ones you want to your own phone.</span></div>
+</div>
+</div>
+</section>
+
+<!-- 6 · PRICING: rise in, hover lift, pulsing "most picked" -->
+<section id="pricing" style="background: #EFEAE3">
+<div style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; display: flex; flex-direction: column; gap: 40px">
+<div class="otr-rv" style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #6B655E">Pricing</span>
+<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(34px, 4vw, 52px); letter-spacing: -0.015em; line-height: 1.08">Cheaper than a bad buy.</h2>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; align-items: stretch">
+<div class="otr-rv otr-lift" style="border: 1px solid #E3DDD4; border-radius: 18px; padding: 26px; display: flex; flex-direction: column; gap: 12px; background: #FFFFFF">
+<span style="font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em">Free</span>
+<span style="font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 44px">$0</span>
+<span style="font-size: 15px; color: #6B655E; line-height: 1.5">3 looks to try it out. Standard quality, small watermark.</span>
+<a href="#start" style="margin-top: auto; text-align: center; border: 1px solid #1A1917; color: #1A1917; text-decoration: none; padding: 12px; border-radius: 999px; font-weight: 700">Start free</a>
+</div>
+<div class="otr-rv otr-lift" style="border: 1px solid #E3DDD4; border-radius: 18px; padding: 26px; display: flex; flex-direction: column; gap: 12px; background: #FFFFFF">
+<span style="font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em">Pack of 20</span>
+<span style="font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 44px">$5.99</span>
+<span style="font-size: 15px; color: #6B655E; line-height: 1.5">One-time. 20 HD looks that never expire. Good for one big thrift run.</span>
+<a href="#start" style="margin-top: auto; text-align: center; border: 1px solid #1A1917; color: #1A1917; text-decoration: none; padding: 12px; border-radius: 999px; font-weight: 700">Buy the pack</a>
+</div>
+<div class="otr-rv otr-lift" style="position: relative; border-radius: 18px; padding: 26px; display: flex; flex-direction: column; gap: 12px; background: #1A1917; color: #F7F4EF; box-shadow: 0 16px 40px rgba(26,25,23,0.18)">
+<span class="otr-pulse" style="position: absolute; top: -14px; right: 20px; background: #E9D7B8; color: #1A1917; font-weight: 700; font-size: 12px; letter-spacing: 0.08em; padding: 6px 12px; border-radius: 999px">MOST PICKED</span>
+<span style="font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em">Shopper</span>
+<span style="font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 44px">$9.99<span style="font-size: 18px; font-weight: 600">/mo</span></span>
+<span style="font-size: 15px; color: #D9D2C8; line-height: 1.5">40 HD looks a month for regular shoppers. Cancel anytime.</span>
+<a href="#start" style="margin-top: auto; text-align: center; background: #E9D7B8; color: #1A1917; text-decoration: none; padding: 12px; border-radius: 999px; font-weight: 700">Get Shopper</a>
+</div>
+<div class="otr-rv otr-lift" style="border: 1px solid #E3DDD4; border-radius: 18px; padding: 26px; display: flex; flex-direction: column; gap: 12px; background: #FFFFFF">
+<span style="font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em">Household</span>
+<span style="font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 44px">$14.99<span style="font-size: 18px; font-weight: 600">/mo</span></span>
+<span style="font-size: 15px; color: #6B655E; line-height: 1.5">100 HD looks a month, shared by up to 4 people.</span>
+<a href="#start" style="margin-top: auto; text-align: center; border: 1px solid #1A1917; color: #1A1917; text-decoration: none; padding: 12px; border-radius: 999px; font-weight: 700">Get Household</a>
+</div>
+</div>
+<p class="otr-rv" style="margin: 0; font-size: 15px; color: #6B655E"><strong style="color: #1A1917">Founding 10:</strong> the first 10 shoppers get a full year of Shopper for $39. · Every plan is capped at 15 looks a day.</p>
+</div>
+</section>
+
+<!-- 7 · SAFETY: checkmarks draw themselves as each rule scrolls in -->
+<section id="safety" style="background: #1A1917; color: #F7F4EF">
+<div style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; display: flex; flex-wrap: wrap; gap: 48px">
+<div class="otr-rv" style="flex: 1 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<span style="font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #E9D7B8">Safety</span>
+<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(34px, 4vw, 52px); letter-spacing: -0.015em; line-height: 1.08">Your photo stays yours.</h2>
+<p style="margin: 0; font-size: 17px; line-height: 1.55; color: #D9D2C8">A try-on app handles the most personal photo you own. These rules are built in, not bolted on.</p>
+</div>
+<ul style="flex: 1 1 480px; min-width: 0; margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; font-size: 16px; line-height: 1.5">
+<li class="otr-rv" style="display: flex; gap: 12px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E9D7B8" stroke-width="2.5" aria-hidden="true" style="flex: none; margin-top: 3px"><path class="otr-check" d="M5 12l5 5 9-10"></path></svg><span><strong>18+ only.</strong> You confirm it's you, or that you have permission, before every upload.</span></li>
+<li class="otr-rv" style="display: flex; gap: 12px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E9D7B8" stroke-width="2.5" aria-hidden="true" style="flex: none; margin-top: 3px"><path class="otr-check" d="M5 12l5 5 9-10"></path></svg><span><strong>Clothes on, always.</strong> Requests to undress or sexualize anyone are blocked and the account is closed.</span></li>
+<li class="otr-rv" style="display: flex; gap: 12px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E9D7B8" stroke-width="2.5" aria-hidden="true" style="flex: none; margin-top: 3px"><path class="otr-check" d="M5 12l5 5 9-10"></path></svg><span><strong>Deleted in 24 hours.</strong> We never build a face or body profile.</span></li>
+<li class="otr-rv" style="display: flex; gap: 12px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E9D7B8" stroke-width="2.5" aria-hidden="true" style="flex: none; margin-top: 3px"><path class="otr-check" d="M5 12l5 5 9-10"></path></svg><span><strong>Report and remove.</strong> Anyone can ask us to take down an image of them, and we act within 48 hours.</span></li>
+</ul>
+</div>
+</section>
+
+<!-- 8 · CTA: a hanger that sways -->
+<section id="start" style="padding: 96px 24px">
+<div class="otr-rv" style="max-width: 1152px; margin: 0 auto; background: #7A2434; color: #F7F4EF; border-radius: 28px; padding: 56px 32px; display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; box-shadow: 0 20px 50px rgba(26,25,23,0.16)">
+<svg class="otr-bob" width="72" height="56" viewBox="0 0 72 56" fill="none" stroke="#E9D7B8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M36 6 a6 6 0 1 1 6 6 c-3 0-6 2-6 5 v4"></path><path d="M36 21 L4 46 H68 Z"></path></svg>
+<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(34px, 4.5vw, 58px); letter-spacing: -0.015em; line-height: 1">Next time you're at the rack, try it on here first.</h2>
+<a href="#top" class="otr-lift" style="background: #E9D7B8; color: #1A1917; text-decoration: none; padding: 16px 28px; border-radius: 999px; font-weight: 700; font-size: 17px">Try 3 looks free</a>
+<span style="font-weight: 600; font-size: 13px">Works on iPhone and Android · No app store</span>
+</div>
+</section>
+</main>
+
+<footer style="border-top: 1px solid #E3DDD4">
+<div style="max-width: 1200px; margin: 0 auto; padding: 28px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 14px; color: #6B655E">
+<span>© 2026 Off the Rack · [offtherack.app]</span>
+<div style="display: flex; flex-wrap: wrap; gap: 20px">
+<a href="#safety">Report a photo</a><a href="#safety">Privacy</a><a href="#safety">Terms</a>
+</div>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"startSplit":{"editor":"range","min":0,"max":100,"step":1,"unit":"%","default":50},"$preview":{"width":1440,"height":5000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const split = (this.state && this.state.split != null) ? this.state.split : (this.props.startSplit ?? 50);
+    return {
+      split: split,
+      splitPct: split + '%',
+      setSplit: (e) => this.setState({ split: Number(e.target.value) })
+    };
+  }
+}
+</script>
+</body>
+</html>
