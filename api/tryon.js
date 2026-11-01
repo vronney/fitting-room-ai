@@ -75,6 +75,6 @@ Output only the edited image.` }
     res.status(200).json({ image: `data:${d.mimeType || d.mime_type || "image/png"};base64,${d.data}`, text, plan, model: IMG_MODEL });
   } catch (e) {
     console.error("tryon failed:", e.message);
-    res.status(e.status && e.status >= 400 && e.status < 600 ? e.status : 502).json({ error: e.timeout ? "timeout" : "gemini", message: e.timeout ? "That one took too long. Tap Regenerate — it usually works on the second try." : e.message });
+    res.status(e.status && e.status >= 400 && e.status < 600 ? e.status : 502).json({ error: e.timeout ? "timeout" : "gemini", message: e.timeout ? "That one took too long. Tap Try again — it usually works on the second go." : e.message });
   }
 }
