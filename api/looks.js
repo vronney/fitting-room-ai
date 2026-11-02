@@ -5,6 +5,6 @@ export default async function handler(req, res) {
   const id = req.query?.device;
   if (!validDevice(id)) return res.status(400).json({ error: "bad device" });
   if (!sql) return res.status(200).json({ left: null, unlimited: true, free: null, paid: null, note: "counter not configured" });
-  try { res.status(200).json(asJson(remaining(await getDevice(id)))); }
+  try { res.status(200).json({ ...asJson(remaining(await getDevice(id))), packs: !!(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_PRICE_PACK), founding_url: process.env.FOUNDING_PAYMENT_LINK || null }); }
   catch (e) { console.error("looks failed:", e.message); res.status(502).json({ error: "db" }); }
 }

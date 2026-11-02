@@ -29,7 +29,13 @@ Push to `main` → Vercel auto-deploys (once the repo is connected), or `vercel 
 ## Safety posture (non-negotiable)
 Dresses people, never undresses them. 18+ and consent attestation, input + output moderation, prompt sanitizer, 24 h deletion, 48 h takedown. See `docs/blueprint-summary.md`.
 
-## Founding 10 (manual, until Stripe)
+## Payments (Stripe, test mode)
+- `api/checkout.js` — Stripe-hosted Checkout for the $5.99 Pack of 20 (`STRIPE_PRICE_PACK`), `client_reference_id` = device id
+- `api/stripe-webhook.js` — `checkout.session.completed` → `paid_left += 20` (pack) or `unlimited_until + 365 d` (Founding 10 Payment Link, device code from the custom field); idempotent on session id; unmatched devices logged to `payments` for hand fixing
+- Env: `STRIPE_SECRET_KEY` (sk_test_…), `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_PACK`, `STRIPE_PRICE_FOUNDING`, `FOUNDING_PAYMENT_LINK`, `APP_URL`
+- Go live: flip the account to live mode, recreate products/price/payment link/webhook there, swap the five env values.
+
+## Founding 10 (manual fallback)
 A customer emails from the app; the mail body carries their device id. Grant a year:
 ```sql
 UPDATE devices SET unlimited_until = now() + interval '1 year' WHERE id = '<device id>';
