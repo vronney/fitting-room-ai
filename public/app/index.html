@@ -85,6 +85,12 @@
   footer a{color:var(--stone);min-height:44px;display:inline-flex;align-items:center}
   .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 </style>
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once unregister identify alias reset group getFeatureFlag isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_wxagrkohsy8Hyi42ESAWYabh45Ar2iZ8zR8pEuph8M7A',{api_host:'https://us.i.posthog.com',autocapture:false,capture_pageview:true,capture_pageleave:true,disable_session_recording:true,enable_heatmaps:false,capture_dead_clicks:false,capture_performance:false,persistence:'localStorage+cookie',person_profiles:'identified_only'});
+posthog.register({app:'off-the-rack'});
+window.otr=(e,p)=>{try{posthog.capture('otr_'+e,p||{})}catch{}};
+</script>
 </head>
 <body>
 <div class="wrap">
@@ -172,6 +178,8 @@ const $=id=>document.getElementById(id);
 const S={person:null, original:null, items:[], looks:[]};
 const DEV=(()=>{let d=null;try{d=localStorage.getItem('otr.device')}catch{} if(!d||!/^[a-z0-9-]{16,64}$/.test(d)){d=(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2,12)).toLowerCase();try{localStorage.setItem('otr.device',d)}catch{}} return d;})();
 let LOOKS={left:null,unlimited:true};
+try{posthog.identify(DEV);}catch{}
+otr('app_open',{standalone:window.matchMedia('(display-mode: standalone)').matches||!!navigator.standalone});
 function setLooks(l){ if(!l) return; LOOKS=l; const p=$('pill'); if(l.unlimited||l.left==null) p.textContent='Free preview'; else p.textContent=l.left+(l.left===1?' LOOK LEFT':' LOOKS LEFT'); if(!l.unlimited&&l.left===0) noLooks(); }
 const DAY=864e5, LS=(k,v)=>{try{ if(v===undefined) return JSON.parse(localStorage.getItem(k)); localStorage.setItem(k,JSON.stringify(v)); }catch{ return null; }};
 
@@ -194,9 +202,9 @@ function ready(){ $('reset').style.display=(S.person||S.items.length)?'inline-fl
 function showPerson(){ if(!S.person) return; $('pImg').src=S.person.url; $('drop').classList.add('has'); }
 
 async function onPerson(e){ const f=e.target.files&&e.target.files[0]; e.target.value=''; if(!f) return;
-  try{ S.person=await fileToJpeg(f,1280); S.original=S.person; $('undoBase').style.display='none'; showPerson(); status(''); saveSession(); }
+  try{ S.person=await fileToJpeg(f,1280); S.original=S.person; $('undoBase').style.display='none'; showPerson(); status(''); saveSession(); otr('person_added',{source:e.target.id==='f-person-cam'?'camera':'library'}); }
   catch{ status("Couldn't open that photo. Take it again, or if it's an iPhone HEIC set Settings → Camera → Formats → Most Compatible.",true); } ready(); }
-async function onCloth(e){ const fs=[...(e.target.files||[])]; e.target.value=''; for(const f of fs){ try{ const j=await fileToJpeg(f,1024); S.items.push({...j,on:true}); }catch{ status("Couldn't open one of the photos. Take it again or pick a different one.",true);} } renderTray(); ready(); saveSession(); }
+async function onCloth(e){ const fs=[...(e.target.files||[])]; e.target.value=''; if(fs.length) otr('item_added',{count:fs.length,source:e.target.id==='f-cloth-cam'?'camera':'library'}); for(const f of fs){ try{ const j=await fileToJpeg(f,1024); S.items.push({...j,on:true}); }catch{ status("Couldn't open one of the photos. Take it again or pick a different one.",true);} } renderTray(); ready(); saveSession(); }
 ['f-person','f-person-cam'].forEach(id=>$(id).addEventListener('change',onPerson));
 ['f-cloth','f-cloth-cam'].forEach(id=>$(id).addEventListener('change',onCloth));
 
@@ -213,12 +221,12 @@ const ERR={setup:'We\'re doing maintenance. Try again in a few minutes.',
   cap:'You\'ve hit today\'s limit of 15 looks. Come back tomorrow.',
   blocked:null, generic:'Something went wrong on our end. Tap Try again. If it keeps happening, try a different photo.'};
 function blocked(msg){ status('<strong>We can\'t make this one.</strong><br>'+(msg||'This request isn\'t something we\'ll generate.')+'<br>We dress real people, 18 and over, with their clothes on.<br><a class="btn ghost" href="/report.html">Report a problem</a> <button class="btn ghost" id="startOver">Start over</button>',true); $('startOver').onclick=startOver; }
-function noLooks(){ status('<strong>You\'ve used your 3 free looks.</strong><br>Your looks are still on this phone for 24 hours — save the ones you want.<br><br><strong>Founding 10:</strong> the first 10 shoppers get a year of unlimited looks for $39. <a class="btn ghost" href="mailto:hello@offtherack.app?subject=Founding%2010&body=Device%20'+DEV+'">Email us</a><br><span class="hint">Packs of 20 for $5.99 are coming soon.</span>',false); $('go').classList.add('off'); $('goHint').style.display='none'; }
+function noLooks(){ otr('paywall_view'); status('<strong>You\'ve used your 3 free looks.</strong><br>Your looks are still on this phone for 24 hours — save the ones you want.<br><br><strong>Founding 10:</strong> the first 10 shoppers get a year of unlimited looks for $39. <a class="btn ghost" href="mailto:hello@offtherack.app?subject=Founding%2010&body=Device%20'+DEV+'">Email us</a><br><span class="hint">Packs of 20 for $5.99 are coming soon.</span>',false); $('go').classList.add('off'); $('goHint').style.display='none'; }
 function startOver(){ S.person=S.original=null; S.items=[]; lastResult=null; $('note').value=''; $('undoBase').style.display='none'; $('drop').classList.remove('has'); $('pImg').removeAttribute('src'); renderTray(); status(''); $('resCard').style.display='none'; DB.set('session',null); ready(); window.scrollTo({top:0,behavior:'smooth'}); }
 
 async function tryOn(){
   const sel=S.items.filter(i=>i.on), garments=sel.map(i=>({data:i.data,mime:i.mime})); if(!S.person||!garments.length||!consented()) return;
-  status(''); $('resCard').style.display='none'; $('go').disabled=true;
+  status(''); $('resCard').style.display='none'; $('go').disabled=true; const t0=Date.now(); otr('generate',{items:garments.length,note:!!$('note').value.trim(),retry:!!lastResult});
   $('workThumbs').innerHTML=sel.map(i=>`<img src="${i.url}" alt="">`).join(''); const lis=[...$('workSteps').children]; lis.forEach(l=>l.className=''); lis[0].className='on';
   $('work').classList.add('on'); $('work').scrollIntoView({behavior:'smooth',block:'center'});
   let si=0; const tick=setInterval(()=>{ if(si<lis.length-1){ lis[si].className='done'; si++; lis[si].className='on'; } },6000);
@@ -226,26 +234,27 @@ async function tryOn(){
     ac=new AbortController(); const kill=setTimeout(()=>ac.abort('timeout'),115000);
     const r=await fetch('/api/tryon',{method:'POST',headers:{'content-type':'application/json'},signal:ac.signal,body:JSON.stringify({device:DEV,person:{data:S.person.data,mime:S.person.mime},garments,note:$('note').value.trim()})}).finally(()=>clearTimeout(kill));
     const j=await r.json().catch(()=>({}));
-    if(!r.ok){ if(j.error==='setup') console.warn(j.message); if(j.error==='blocked') blocked(j.message); else if(j.error==='nolooks') setLooks({left:0,unlimited:false}); else if(j.error==='cap') status(j.message||ERR.cap,true); else status((ERR[j.error]||ERR.generic)+' <button class="btn ghost" id="retry">Try again</button>',true), $('retry').onclick=tryOn; }
+    if(!r.ok){ otr(j.error==='blocked'?'blocked':j.error==='nolooks'?'paywall':'error',{code:j.error||r.status,ms:Date.now()-t0}); if(j.error==='setup') console.warn(j.message); if(j.error==='blocked') blocked(j.message); else if(j.error==='nolooks') setLooks({left:0,unlimited:false}); else if(j.error==='cap') status(j.message||ERR.cap,true); else status((ERR[j.error]||ERR.generic)+' <button class="btn ghost" id="retry">Try again</button>',true), $('retry').onclick=tryOn; }
     else { lastResult=j.image; $('rImg').src=j.image; $('bImg').src=S.person.url; $('cmp').style.setProperty('--cut','50%'); $('cut').value=50;
       const seen=(j.plan&&j.plan.garments)?j.plan.garments.map(g=>g.description||g.type).join(', '):(j.text||''); $('rText').textContent=seen?('Wearing: '+seen):''; $('seen').style.display=seen?'block':'none';
-      setLooks(j.looks); $('resCard').style.display='block'; pushLook(j.image); $('resCard').scrollIntoView({behavior:'smooth'}); }
-  }catch(err){ if(ac.signal.aborted) status(ac.signal.reason==='cancel'?'Cancelled.':ERR.timeout+' <button class="btn ghost" id="retry">Try again</button>',true); else status('No connection. Check your signal and tap Try again. <button class="btn ghost" id="retry">Try again</button>',true); const b=$('retry'); if(b) b.onclick=tryOn; }
+      otr('result',{ms:Date.now()-t0,items:garments.length,left:j.looks&&j.looks.left}); setLooks(j.looks); $('resCard').style.display='block'; pushLook(j.image); $('resCard').scrollIntoView({behavior:'smooth'}); }
+  }catch(err){ otr(ac.signal.aborted?(ac.signal.reason==='cancel'?'cancel':'timeout'):'network_error',{ms:Date.now()-t0}); if(ac.signal.aborted) status(ac.signal.reason==='cancel'?'Cancelled.':ERR.timeout+' <button class="btn ghost" id="retry">Try again</button>',true); else status('No connection. Check your signal and tap Try again. <button class="btn ghost" id="retry">Try again</button>',true); const b=$('retry'); if(b) b.onclick=tryOn; }
   clearInterval(tick); $('work').classList.remove('on'); $('go').disabled=false; ac=null;
 }
 $('go').onclick=tryOn; $('again').onclick=tryOn; $('reset').onclick=()=>{ if(!S.person&&!S.items.length) return; if(confirm('Clear your photo and items and start over? Recent looks stay.')) startOver(); };
+document.addEventListener('click',e=>{const a=e.target.closest('a[href^="mailto:"]'); if(a) otr('founding_click',{where:'app'});});
 $('clearLooks').onclick=()=>{ S.looks=[]; LS('otr.looks',[]); renderLooks(); }; $('cancel').onclick=()=>ac&&ac.abort('cancel');
 $('useBase').onclick=()=>{ if(!lastResult) return; $('undoBase').style.display='inline'; S.person={url:lastResult,data:lastResult.split(',')[1],mime:lastResult.slice(5,lastResult.indexOf(';'))}; showPerson(); S.items.forEach(i=>i.on=false); renderTray(); ready(); saveSession(); status('This look is now your photo. Pick the next item and tap Try it on.'); window.scrollTo({top:0,behavior:'smooth'}); };
 $('undoBase').onclick=()=>{ if(!S.original) return; S.person=S.original; showPerson(); $('undoBase').style.display='none'; status('Back to your original photo.'); ready(); saveSession(); };
 $('cut').oninput=e=>$('cmp').style.setProperty('--cut',e.target.value+'%');
-$('consent').onchange=()=>{ LS('otr.consent',$('consent').checked?Date.now():0); ready(); };
+$('consent').onchange=()=>{ LS('otr.consent',$('consent').checked?Date.now():0); if($('consent').checked) otr('consent'); ready(); };
 
 // --- export with a baked-in provenance strip ---
 async function stamped(url){ const im=new Image(); im.src=url; await im.decode(); const c=document.createElement('canvas'); c.width=im.width; c.height=im.height; const g=c.getContext('2d'); g.drawImage(im,0,0);
   const h=Math.max(28,Math.round(im.height*0.045)); g.fillStyle='rgba(107,101,94,.92)'; g.fillRect(0,im.height-h,im.width,h); g.fillStyle='#fff'; g.font=`600 ${Math.round(h*0.5)}px Manrope, sans-serif`; g.textBaseline='middle'; g.fillText('AI preview · Off the Rack',Math.round(h*0.5),im.height-h/2);
   return new Promise(res=>c.toBlob(res,'image/png')); }
-$('dl').onclick=async()=>{ if(!lastResult) return; const b=await stamped(lastResult); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='off-the-rack.png'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),5000); };
-$('share').onclick=async()=>{ if(!lastResult) return; const b=await stamped(lastResult); const f=new File([b],'off-the-rack.png',{type:'image/png'});
+$('dl').onclick=async()=>{ if(!lastResult) return; otr('save'); const b=await stamped(lastResult); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='off-the-rack.png'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),5000); };
+$('share').onclick=async()=>{ if(!lastResult) return; otr('share'); const b=await stamped(lastResult); const f=new File([b],'off-the-rack.png',{type:'image/png'});
   if(navigator.canShare&&navigator.canShare({files:[f]})){ try{ await navigator.share({files:[f],title:'Off the Rack'}); }catch{} } else $('dl').click(); };
 
 // --- recent looks, 24 h on this phone ---

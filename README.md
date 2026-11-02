@@ -35,3 +35,6 @@ A customer emails from the app; the mail body carries their device id. Grant a y
 UPDATE devices SET unlimited_until = now() + interval '1 year' WHERE id = '<device id>';
 ```
 Grant a 20-pack: `UPDATE devices SET paid_left = paid_left + 20 WHERE id = '<device id>';`
+
+## Analytics (PostHog)
+Shared project with other R&E apps; every event carries `app: off-the-rack`. Autocapture, session replay, heatmaps and web vitals are **off** (pages hold photos of people). Funnel: `$pageview` (landing) → `otr_cta_click` → `otr_app_open` → `otr_consent` → `otr_person_added` / `otr_item_added` → `otr_generate` → `otr_result` | `otr_error` | `otr_blocked` | `otr_timeout` → `otr_save` / `otr_share` → `otr_paywall_view` → `otr_founding_click`. App users are identified by their device id. Note: the project's "filter test accounts" setting hides `*.vercel.app` hosts — untick it until the real domain is live.
