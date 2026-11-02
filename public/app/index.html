@@ -155,6 +155,7 @@ window.otr=(e,p)=>{try{posthog.capture('otr_'+e,p||{})}catch{}};
       <button id="useBase">Add another item over this look</button>
       <button id="undoBase" style="display:none">Back to original photo</button>
       <a href="/report.html">Report this image</a>
+      <button id="moreLooks" style="display:none">Get 20 more looks · $5.99</button>
     </div>
     <details id="seen" style="display:none"><summary>What we saw</summary><div id="rText"></div></details>
   </div>
@@ -180,7 +181,7 @@ const DEV=(()=>{let d=null;try{d=localStorage.getItem('otr.device')}catch{} if(!
 let LOOKS={left:null,unlimited:true};
 try{posthog.identify(DEV);}catch{}
 otr('app_open',{standalone:window.matchMedia('(display-mode: standalone)').matches||!!navigator.standalone});
-function setLooks(l){ if(!l) return; LOOKS=l; const p=$('pill'); if(l.unlimited||l.left==null) p.textContent='Free preview'; else p.textContent=l.left+(l.left===1?' LOOK LEFT':' LOOKS LEFT'); if(!l.unlimited&&l.left===0) noLooks(); }
+function setLooks(l){ if(!l) return; LOOKS=l; const m=$('moreLooks'); if(m){ m.style.display=(l.packs&&!l.unlimited&&l.left!=null&&l.left<=1)?'inline':'none'; m.onclick=buyPack; } const p=$('pill'); if(l.unlimited||l.left==null) p.textContent='Free preview'; else p.textContent=l.left+(l.left===1?' LOOK LEFT':' LOOKS LEFT'); if(!l.unlimited&&l.left===0) noLooks(); }
 const DAY=864e5, LS=(k,v)=>{try{ if(v===undefined) return JSON.parse(localStorage.getItem(k)); localStorage.setItem(k,JSON.stringify(v)); }catch{ return null; }};
 
 // --- tiny IndexedDB session store (survives the iOS camera reload) ---
@@ -221,7 +222,8 @@ const ERR={setup:'We\'re doing maintenance. Try again in a few minutes.',
   cap:'You\'ve hit today\'s limit of 15 looks. Come back tomorrow.',
   blocked:null, generic:'Something went wrong on our end. Tap Try again. If it keeps happening, try a different photo.'};
 function blocked(msg){ status('<strong>We can\'t make this one.</strong><br>'+(msg||'This request isn\'t something we\'ll generate.')+'<br>We dress real people, 18 and over, with their clothes on.<br><a class="btn ghost" href="/report.html">Report a problem</a> <button class="btn ghost" id="startOver">Start over</button>',true); $('startOver').onclick=startOver; }
-function noLooks(){ otr('paywall_view'); status('<strong>You\'ve used your 3 free looks.</strong><br>Your looks are still on this phone for 24 hours — save the ones you want.<br><br><strong>Founding 10:</strong> the first 10 shoppers get a year of unlimited looks for $39. <a class="btn ghost" href="mailto:hello@offtherack.app?subject=Founding%2010&body=Device%20'+DEV+'">Email us</a><br><span class="hint">Packs of 20 for $5.99 are coming soon.</span>',false); $('go').classList.add('off'); $('goHint').style.display='none'; }
+function noLooks(){ otr('paywall_view'); const pack=LOOKS.packs?'<button class="btn primary" id="buyPack" style="margin-top:10px">Get 20 looks for $5.99</button><br><span class="hint">One-time. Never expire. Tied to this phone.</span>':'<span class="hint">Packs of 20 for $5.99 are coming soon.</span>'; const founding=LOOKS.founding_url?'<a class="btn ghost" href="'+LOOKS.founding_url+'" data-founding>Founding 10: a year unlimited, $39</a><br><span class="hint">Your device code is <code>'+DEV+'</code> — paste it on the checkout page.</span>':'<a class="btn ghost" href="mailto:hello@offtherack.app?subject=Founding%2010&body=Device%20'+DEV+'">Email us about Founding 10</a>'; status('<strong>You\'ve used your 3 free looks.</strong><br>Your looks are still on this phone for 24 hours — save the ones you want.<br>'+pack+'<br><br>'+founding,false); const b=$('buyPack'); if(b) b.onclick=buyPack; $('go').classList.add('off'); $('goHint').style.display='none'; }
+async function buyPack(){ otr('checkout_start'); const b=$('buyPack'); if(b){ b.disabled=true; b.innerHTML='<span class="spin"></span>Opening checkout…'; } try{ const r=await fetch('/api/checkout',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({device:DEV})}); const j=await r.json(); if(j.url) location.href=j.url; else throw new Error(j.message||'no url'); }catch(e){ status('Couldn\'t start checkout. Try again in a moment.',true); } }
 function startOver(){ S.person=S.original=null; S.items=[]; lastResult=null; $('note').value=''; $('undoBase').style.display='none'; $('drop').classList.remove('has'); $('pImg').removeAttribute('src'); renderTray(); status(''); $('resCard').style.display='none'; DB.set('session',null); ready(); window.scrollTo({top:0,behavior:'smooth'}); }
 
 async function tryOn(){
@@ -264,8 +266,13 @@ $('modal').onclick=()=>$('modal').classList.remove('on');
 (()=>{ const saved=LS('otr.looks'); if(Array.isArray(saved)){ S.looks=saved.filter(l=>l&&l.src&&Date.now()-l.at<DAY); LS('otr.looks',S.looks); renderLooks(); } })();
 // consent remembered for the 2 h session only
 (()=>{ const at=LS('otr.consent'); if(at&&Date.now()-at<2*36e5){ $('consent').checked=true; $('consentWhen').textContent='Confirmed on '+new Date(at).toLocaleDateString(); $('consentWhen').style.display='block'; } ready(); })();
-// looks remaining for this device
-fetch('/api/looks?device='+DEV).then(r=>r.json()).then(setLooks).catch(()=>{});
+// looks remaining for this device (+ return from checkout)
+(async()=>{ const q=new URLSearchParams(location.search); const paid=q.get('paid'), founding=q.get('founding'), buy=q.get('buy'); if(paid!==null||founding||buy){ history.replaceState(null,'',location.pathname); }
+  let l=null; try{ l=await (await fetch('/api/looks?device='+DEV)).json(); }catch{}
+  if(paid==='1'||founding){ otr('checkout_return',{founding:!!founding}); for(let i=0;i<8&&(!l||(!l.unlimited&&(l.paid||0)<20)&&!founding);i++){ await new Promise(r=>setTimeout(r,1500)); try{ l=await (await fetch('/api/looks?device='+DEV)).json(); }catch{} }
+    if(l&&(l.unlimited||(l.paid||0)>=20)){ status(l.unlimited?'<strong>You\'re a Founding 10 member.</strong> Unlimited looks for a year. Thank you.':'<strong>20 looks added.</strong> Your photo and items are still here.',false); $('go').classList.remove('off'); } else status('Payment received — your looks will appear in a moment. If they don\'t, email hello@offtherack.app with code '+DEV+'.',false); }
+  else if(paid==='0') status('No charge was made.',false);
+  setLooks(l); if(buy&&l&&l.packs) buyPack(); })();
 // restore an in-progress session (2 h)
 (async()=>{ const s=await DB.get('session'); if(s&&Date.now()-s.at<2*36e5){ S.person=s.person; S.original=s.original||s.person; S.items=s.items||[]; showPerson(); renderTray(); ready(); } })();
 // tips card (once)
