@@ -63,6 +63,12 @@ a{color:#7A2434}a:hover{color:#5C1A27}
 .otr-dup{display:none !important}
 }
 </style>
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once unregister identify alias reset group getFeatureFlag isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_wxagrkohsy8Hyi42ESAWYabh45Ar2iZ8zR8pEuph8M7A',{api_host:'https://us.i.posthog.com',autocapture:false,capture_pageview:true,capture_pageleave:true,disable_session_recording:true,enable_heatmaps:false,capture_dead_clicks:false,capture_performance:false,persistence:'localStorage+cookie',person_profiles:'identified_only'});
+posthog.register({app:'off-the-rack'});
+window.otr=(e,p)=>{try{posthog.capture('otr_'+e,p||{})}catch{}};
+</script>
 </head>
 <body>
 <div style="font-family: 'Manrope', system-ui, sans-serif; color: #1A1917; background: #F7F4EF; min-height: 100vh; overflow-x: hidden">
@@ -278,5 +284,6 @@ a{color:#7A2434}a:hover{color:#5C1A27}
   r.addEventListener('input',set);set();
 })();
 </script>
+<script>document.querySelectorAll('a[href="/app"]').forEach((a,i)=>a.addEventListener('click',()=>otr('cta_click',{label:a.textContent.trim(),index:i})));document.querySelectorAll('a[href^="mailto:"]').forEach(a=>a.addEventListener('click',()=>otr('founding_click',{where:'landing'})));</script>
 </body>
 </html>
