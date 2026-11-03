@@ -1,1 +1,1 @@
-{"name":"fitting-room-ai","private":true,"type":"module","dependencies":{"@neondatabase/serverless":"^1.2.0","stripe":"^23.1.0"}}
+{"name":"fitting-room-ai","private":true,"type":"module","dependencies":{"@neondatabase/serverless":"^1.2.0","sharp":"^0.35.5","stripe":"^23.1.0"}}
