@@ -1,67 +1,80 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#1A1917">
-<meta name="description" content="Snap yourself, snap anything on the rack, see it on your real body in under a minute. Works in any store, no app download.">
-<link rel="icon" href="/icon.svg">
 <title>Off the Rack — see it on you before the fitting-room line</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&amp;family=Manrope:wght@400;500;600;700&amp;display=swap">
+<meta name="description" content="Snap yourself, snap anything on the rack, see it on your real body in under a minute. Works in any store. No app download. 3 free looks.">
+<meta property="og:title" content="Off the Rack — the in-store try-on app">
+<meta property="og:description" content="Snap the hanger. Snap yourself. See the whole outfit on your real body in under a minute.">
+<meta property="og:image" content="/img/demo-after.jpg">
+<meta name="theme-color" content="#F7F4EF">
+<link rel="icon" href="/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-body{margin:0;background:#F7F4EF}
-a{color:#7A2434}a:hover{color:#5C1A27}
-
-/* One 9s story, three 3s beats: snap you → snap hanger → see it on you.
-   Every phase uses the same keyframe; the delay picks the beat. */
-@keyframes otr-on{0%{opacity:0}3%,31%{opacity:1}35%,100%{opacity:0}}
-@keyframes otr-card{0%,31%{transform:translateY(-8px);border-color:#7A2434;box-shadow:0 18px 40px rgba(122,36,52,0.16)}36%,97%{transform:none;border-color:#E3DDD4;box-shadow:0 8px 24px rgba(26,25,23,0.05)}100%{transform:translateY(-8px);border-color:#7A2434}}
-@keyframes otr-badge{0%,31%{background:#7A2434}36%,97%{background:#1A1917}100%{background:#7A2434}}
-@keyframes otr-bar{0%{transform:scaleX(0)}31%{transform:scaleX(1)}35%,100%{transform:scaleX(1);opacity:0}}
-@keyframes otr-flash{0%,13%{opacity:0}15%{opacity:0.9}20%,100%{opacity:0}}
-@keyframes otr-frame{0%,12%{transform:scale(1.04)}16%,100%{transform:scale(1)}}
-@keyframes otr-drop{0%{transform:translateY(-36px) rotate(-6deg);opacity:0}9%{transform:translateY(4px) rotate(2deg);opacity:1}13%,100%{transform:none;opacity:1}}
-@keyframes otr-reveal{0%,4%{clip-path:inset(0 0 100% 0)}20%,100%{clip-path:inset(0 0 0 0)}}
-@keyframes otr-scan{0%,4%{top:0;opacity:1}20%{top:100%;opacity:1}22%,100%{top:100%;opacity:0}}
-@keyframes otr-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
-@keyframes otr-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@keyframes otr-bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
-@keyframes otr-rise{from{opacity:0;transform:translateY(48px)}to{opacity:1;transform:none}}
-@keyframes otr-draw{from{stroke-dashoffset:24}to{stroke-dashoffset:0}}
-
-.otr-ph{grid-area:1/1;opacity:0;animation:otr-on 9s linear infinite}
-.otr-b1{animation-delay:0s}
-.otr-b2{animation-delay:-6s}
-.otr-b3{animation-delay:-3s}
-.otr-flash{animation:otr-flash 9s linear infinite}
-.otr-frame{animation:otr-frame 9s ease-out infinite}
-.otr-drop{animation:otr-drop 9s cubic-bezier(.2,.8,.2,1) infinite;animation-delay:-6s}
-.otr-reveal{animation:otr-reveal 9s ease-in-out infinite;animation-delay:-3s}
-.otr-scan{animation:otr-scan 9s ease-in-out infinite;animation-delay:-3s}
-.otr-bar{transform-origin:left;animation:otr-bar 9s linear infinite}
-.otr-card{animation:otr-card 9s ease-in-out infinite}
-.otr-badge{animation:otr-badge 9s ease-in-out infinite}
-.otr-pulse{animation:otr-pulse 2.4s ease-in-out infinite}
-.otr-track{display:flex;width:max-content;animation:otr-marquee 28s linear infinite}
-.otr-bob{animation:otr-bob 4s ease-in-out infinite}
-.otr-lift{transition:transform .25s ease, box-shadow .25s ease}
-.otr-lift:hover{transform:translateY(-6px);box-shadow:0 20px 44px rgba(26,25,23,0.14)}
-.otr-check{stroke-dasharray:24;stroke-dashoffset:0}
-.otr-range{width:100%;accent-color:#7A2434;height:44px;cursor:ew-resize}
-
-/* Scroll reveals: only where the browser supports scroll-driven animation; otherwise content is simply visible. */
-@supports (animation-timeline: view()){
-.otr-rv{animation:otr-rise linear both;animation-timeline:view();animation-range:entry 0% cover 28%}
-.otr-check{animation:otr-draw linear both;animation-timeline:view();animation-range:entry 20% cover 35%}
-}
-
-@media (prefers-reduced-motion: reduce){
-*,*::before,*::after{animation:none !important;transition:none !important}
-.otr-b1.otr-ph{opacity:1}
-.otr-track{width:auto;flex-wrap:wrap;justify-content:center}
-.otr-dup{display:none !important}
-}
+  :root{--bone:#F7F4EF;--linen:#EFEAE3;--line:#E3DDD4;--ink:#1A1917;--stone:#6B655E;--merlot:#7A2434;--champagne:#E9D7B8;--muted:#D9D2C8}
+  *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--bone);color:var(--ink);font-family:Manrope,system-ui,sans-serif;font-size:17px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+  a{color:inherit} .wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+  .eyebrow{font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--stone)}
+  h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:500;letter-spacing:-.015em;line-height:1.05;margin:0}
+  h1{font-size:clamp(40px,9vw,76px)} h2{font-size:clamp(30px,6vw,52px)} h3{font-size:24px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 24px;border-radius:999px;font-weight:700;font-size:17px;text-decoration:none;border:1px solid var(--ink);background:var(--ink);color:#fff;white-space:nowrap}
+  .btn.light{background:var(--champagne);border-color:var(--champagne);color:var(--ink)} .btn.outline{background:transparent;color:var(--ink)}
+  .btn.big{min-height:60px;font-size:18px;box-shadow:0 10px 30px rgba(26,25,23,.14)}
+  /* header */
+  header{position:sticky;top:0;z-index:5;background:rgba(247,244,239,.9);backdrop-filter:saturate(1.2) blur(8px);border-bottom:1px solid var(--line)}
+  nav{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:Fraunces,Georgia,serif;font-size:21px;text-decoration:none;white-space:nowrap;min-height:44px}
+  .brand svg{flex:none}
+  nav .links{display:none;gap:22px;font-weight:600;font-size:15px} nav .links a{text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+  nav .btn{min-height:44px;padding:0 18px;font-size:15px}
+  @media(min-width:760px){nav .links{display:flex}}
+  /* hero */
+  .hero{padding:36px 0 28px;display:grid;gap:28px}
+  @media(min-width:860px){.hero{grid-template-columns:1.1fr .9fr;align-items:center;gap:56px;padding:72px 0 64px}}
+  .hero .tag{display:inline-flex;align-self:flex-start;background:var(--champagne);border-radius:999px;padding:8px 14px}
+  .hero p.lead{font-size:clamp(17px,4.3vw,21px);color:var(--stone);margin:14px 0 22px;max-width:540px}
+  .hero .cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  .hero .fine{font-weight:600;font-size:13px;color:var(--stone);margin-top:14px}
+  .cmp{position:relative;border-radius:24px;overflow:hidden;border:1px solid var(--line);background:var(--linen);aspect-ratio:3/4;max-height:70dvh;margin:0 auto;width:100%;max-width:440px;box-shadow:0 30px 60px rgba(26,25,23,.14)}
+  .cmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  .cmp .after{clip-path:inset(0 0 0 var(--cut,55%))}
+  .cmp .bar{position:absolute;top:0;bottom:0;left:var(--cut,55%);width:2px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.25);pointer-events:none}
+  .cmp .knob{position:absolute;top:50%;left:var(--cut,55%);transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;pointer-events:none;color:var(--ink);font-weight:700}
+  .cmp .tag{position:absolute;top:14px;font-size:12px;font-weight:600;letter-spacing:.08em;padding:6px 10px;border-radius:999px;background:rgba(26,25,23,.7);color:#fff;pointer-events:none}
+  .cmp .ai{position:absolute;bottom:14px;right:14px;font-size:12px;font-weight:600;padding:6px 10px;border-radius:999px;background:var(--stone);color:#fff;pointer-events:none}
+  .cmp .time{position:absolute;bottom:14px;left:14px;font-size:12px;font-weight:600;letter-spacing:.08em;padding:6px 10px;border-radius:999px;background:var(--merlot);color:#fff;pointer-events:none}
+  .cmp input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;touch-action:pan-y}
+  .cap{text-align:center;font-size:13px;color:var(--stone);margin-top:10px}
+  /* marquee */
+  .band{background:var(--ink);color:var(--bone);padding:14px 0;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;overflow:hidden;white-space:nowrap}
+  .band span{display:inline-block;padding:0 18px}
+  /* sections */
+  section{padding:56px 0} @media(min-width:860px){section{padding:88px 0}}
+  .steps{display:grid;gap:14px;margin-top:28px} @media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr);gap:20px}}
+  .card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px}
+  .num{display:inline-flex;width:40px;height:40px;border-radius:999px;background:var(--ink);color:#fff;align-items:center;justify-content:center;font-weight:700;font-size:14px;margin-bottom:12px}
+  .card p{margin:8px 0 0;color:var(--stone);font-size:16px}
+  .why{background:var(--linen)}
+  .why ul{list-style:none;margin:24px 0 0;padding:0;display:grid;gap:12px} @media(min-width:760px){.why ul{grid-template-columns:repeat(3,1fr)}}
+  .why li{background:var(--bone);border-radius:16px;padding:18px 20px}
+  .why strong{display:block;font-size:17px;margin-bottom:4px} .why span{color:var(--stone);font-size:15px}
+  .price{display:grid;gap:14px;margin-top:28px;max-width:760px} @media(min-width:700px){.price{grid-template-columns:1fr 1fr}}
+  .plan{border:1px solid var(--line);border-radius:20px;padding:24px;background:#fff;display:flex;flex-direction:column;gap:10px}
+  .plan.dark{background:var(--ink);color:var(--bone)} .plan .amt{font-family:Fraunces,Georgia,serif;font-size:44px;line-height:1} .plan p{margin:0;color:var(--stone);font-size:15px} .plan.dark p{color:var(--muted)}
+  .plan .btn{margin-top:auto}
+  .safety{background:var(--ink);color:var(--bone)}
+  .safety ul{list-style:none;margin:24px 0 0;padding:0;display:grid;gap:12px;font-size:16px} @media(min-width:760px){.safety ul{grid-template-columns:1fr 1fr}}
+  .safety li{display:flex;gap:12px;align-items:flex-start} .safety li svg{flex:none;margin-top:4px} .safety strong{color:#fff}
+  .faq{max-width:760px} .faq details{border-bottom:1px solid var(--line);padding:6px 0} .faq summary{cursor:pointer;font-weight:700;font-size:17px;min-height:48px;display:flex;align-items:center;list-style:none} .faq summary::-webkit-details-marker{display:none} .faq details p{margin:0 0 14px;color:var(--stone)}
+  .final{background:var(--merlot);color:var(--bone);border-radius:28px;padding:44px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:18px}
+  .final h2{color:#fff}
+  footer{padding:28px 0 40px;font-size:14px;color:var(--stone);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 20px}
+  footer a{color:var(--stone);min-height:44px;display:inline-flex;align-items:center;margin-right:16px}
+  .sticky{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:rgba(247,244,239,.94);backdrop-filter:blur(8px);border-top:1px solid var(--line);z-index:6;display:none}
+  .sticky .btn{width:100%} .sticky.on{display:block} @media(min-width:860px){.sticky{display:none!important}}
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 <script>
 !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once unregister identify alias reset group getFeatureFlag isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
@@ -71,219 +84,103 @@ window.otr=(e,p)=>{try{posthog.capture('otr_'+e,p||{})}catch{}};
 </script>
 </head>
 <body>
-<div style="font-family: 'Manrope', system-ui, sans-serif; color: #1A1917; background: #F7F4EF; min-height: 100vh; overflow-x: hidden">
-
-<header style="border-bottom: 1px solid #E3DDD4">
-<nav aria-label="Main" style="max-width: 1200px; margin: 0 auto; padding: 18px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
-<a href="#top" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #1A1917">
-<svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true" fill="none" stroke="#7A2434" stroke-width="1.5" stroke-linejoin="round"><path d="M4 15 L15 4 H26 V15 L15 26 Z" fill="#7A2434"></path><circle cx="21" cy="9" r="2" fill="#F7F4EF" stroke="none"></circle></svg>
-<span style="font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 22px; letter-spacing: -0.01em">Off the Rack</span>
-</a>
-<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 24px; font-size: 15px; font-weight: 500">
-<a href="#how" style="color: #1A1917; text-decoration: none">How it works</a>
-<a href="#how" style="color: #1A1917; text-decoration: none">See the difference</a>
-<a href="#pricing" style="color: #1A1917; text-decoration: none">Pricing</a>
-<a href="/app" style="background: #1A1917; color: #FFFFFF; text-decoration: none; padding: 12px 18px; border-radius: 999px; font-weight: 700; min-height: 44px; box-sizing: border-box; display: inline-flex; align-items: center">Try 3 looks free</a>
-</div>
-</nav>
-</header>
+<header><div class="wrap"><nav>
+  <a class="brand" href="#top"><svg width="28" height="28" viewBox="0 0 30 30" aria-hidden="true"><path d="M4 15 L15 4 H26 V15 L15 26 Z" fill="#7A2434"/><circle cx="21" cy="9" r="2" fill="#F7F4EF"/></svg>Off the Rack</a>
+  <div class="links"><a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#safety">Safety</a></div>
+  <a class="btn" href="/app">Try 3 looks free</a>
+</nav></div></header>
 
 <main id="top">
-<!-- 1 · HERO: the phone plays the whole try-on in a 9-second loop -->
-<section style="max-width: 1200px; margin: 0 auto; padding: 72px 24px 72px; display: flex; flex-wrap: wrap; gap: 48px; align-items: center">
-<div style="flex: 1 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
-<span style="font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; background: #E9D7B8; color: #1A1917; padding: 7px 12px; border-radius: 999px; align-self: flex-start">The in-store try-on app</span>
-<h1 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(44px, 6vw, 76px); line-height: 1.04; letter-spacing: -0.015em">See it on you before the fitting-room line.</h1>
-<p style="margin: 0; font-size: 20px; line-height: 1.5; color: #6B655E; max-width: 540px">Snap the hanger. Snap yourself. See the whole outfit on your real body in under a minute. Any rack, any store — thrift, resale, outlet.</p>
-<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
-<a href="/app" class="otr-lift" style="background: #1A1917; color: #FFFFFF; border: 1px solid #1A1917; text-decoration: none; padding: 16px 26px; border-radius: 999px; font-weight: 700; font-size: 17px; box-shadow: 0 8px 24px rgba(26,25,23,0.12)">Try 3 looks free</a>
-<a href="#how" style="color: #1A1917; font-weight: 700; font-size: 16px; padding: 14px 8px">How it works →</a>
-</div>
-<p style="margin: 0; font-weight: 600; font-size: 13px; color: #6B655E">No card to start · Never stored on our servers · 18+</p>
-</div>
+<div class="wrap"><div class="hero">
+  <div>
+    <span class="eyebrow tag">The in-store try-on app</span>
+    <h1 style="margin-top:14px">See it on you before the fitting-room line.</h1>
+    <p class="lead">Snap the hanger. Snap yourself. See the whole outfit on your real body in under a minute. Any rack, any store — thrift, resale, outlet.</p>
+    <div class="cta"><a class="btn big" href="/app">Try 3 looks free</a><a href="#how" style="font-weight:700;padding:14px 8px;text-decoration:underline">How it works</a></div>
+    <p class="fine">No card to start · Never stored on our servers · 18+ · No app download</p>
+  </div>
+  <div>
+    <div class="cmp" id="cmp" style="--cut:55%">
+      <img src="/img/demo-before.jpg" alt="Shopper in a store aisle, before" width="900" height="1200" fetchpriority="high">
+      <img class="after" src="/img/demo-after.jpg" alt="The same shopper wearing the sweater and jeans from the rack" width="900" height="1200">
+      <div class="bar"></div><div class="knob" aria-hidden="true">⇔</div>
+      <span class="tag" style="left:14px">BEFORE</span><span class="tag" style="right:14px">AFTER</span>
+      <span class="time">UNDER 1 MIN</span><span class="ai">AI-generated preview</span>
+      <input type="range" id="cut" min="0" max="100" value="55" aria-label="Drag to compare before and after">
+    </div>
+    <p class="cap">Drag to compare</p>
+  </div>
+</div></div>
 
-<div style="flex: 1 1 380px; min-width: 0; display: flex; justify-content: center">
-<div role="img" aria-label="Animation: a phone takes a photo of you, then of a jacket on a hanger, then shows you wearing the jacket" style="position: relative; width: 320px; height: 600px; border: 1px solid #E3DDD4; border-radius: 40px; background: #FFFFFF; padding: 14px; box-sizing: border-box; box-shadow: 0 30px 60px rgba(26,25,23,0.14)">
-<div style="height: 100%; border-radius: 28px; background: #EFEAE3; display: flex; flex-direction: column; overflow: hidden">
-<div style="flex: 1; display: grid; padding: 14px; position: relative">
+<div class="band" aria-hidden="true"><span>Thrift</span><span>/</span><span>Resale</span><span>/</span><span>Outlet</span><span>/</span><span>Anything on a hanger</span><span>/</span><span>Thrift</span><span>/</span><span>Resale</span><span>/</span><span>Outlet</span><span>/</span><span>Anything on a hanger</span></div>
 
-<!-- beat 1: snap yourself -->
-<div class="otr-ph otr-b1" style="display: flex; flex-direction: column; gap: 10px">
-<div class="otr-frame" style="flex: 1; position: relative; border: 2px dashed #6B655E; border-radius: 18px; background: #E3DDD4; display: flex; align-items: flex-end; justify-content: center; overflow: hidden">
-<svg width="220" height="300" viewBox="0 0 300 375" aria-hidden="true"><circle cx="150" cy="82" r="36" fill="#C9BFB2"></circle><rect x="136" y="112" width="28" height="26" fill="#C9BFB2"></rect><path d="M92 152 Q150 128 208 152 L230 262 L204 268 L198 375 H102 L96 268 L70 262 Z" fill="#9C948A"></path></svg>
-<div class="otr-flash" style="position: absolute; inset: 0; background: #FFFFFF; opacity: 0"></div>
-</div>
-<span style="font-weight: 700; font-size: 13px; text-align: center; color: #1A1917">Snap yourself</span>
-</div>
+<section id="how"><div class="wrap">
+  <span class="eyebrow">How it works</span>
+  <h2 style="margin-top:10px">Three steps, standing in the aisle.</h2>
+  <div class="steps">
+    <div class="card"><span class="num">01</span><h3>Snap yourself</h3><p>One full-body photo. Busy store backgrounds are fine. It never sits on our servers.</p></div>
+    <div class="card"><span class="num">02</span><h3>Snap the hanger</h3><p>On the rack, on a hanger, flat on a table. Add a top and jeans together and see the full outfit at once.</p></div>
+    <div class="card"><span class="num">03</span><h3>See it on you</h3><p>Your body, your shape, as photographed. Save it, try again, or share it with a friend before you buy.</p></div>
+  </div>
+</div></section>
 
-<!-- beat 2: snap the hanger -->
-<div class="otr-ph otr-b2" style="display: flex; flex-direction: column; gap: 10px">
-<div style="flex: 1; border-radius: 18px; background: #F7F4EF; border: 1px solid #E3DDD4; display: flex; align-items: center; justify-content: center">
-<svg class="otr-drop" width="200" height="260" viewBox="0 0 200 260" aria-hidden="true" fill="none" stroke-linejoin="round"><path d="M100 18 a12 12 0 1 1 12 12 c-6 0-12 5-12 11 v6" stroke="#6B655E" stroke-width="4" stroke-linecap="round"></path><path d="M100 47 L20 92 H180 Z" stroke="#6B655E" stroke-width="4"></path><path d="M44 92 L30 240 H86 L100 120 L114 240 H170 L156 92 Z" fill="#7A2434"></path><path d="M86 92 L100 132 L114 92" stroke="#E9D7B8" stroke-width="4"></path></svg>
-</div>
-<span style="font-weight: 700; font-size: 13px; text-align: center; color: #1A1917">Snap the hanger</span>
-</div>
+<section class="why"><div class="wrap">
+  <span class="eyebrow">Why it's different</span>
+  <h2 style="margin-top:10px">Built for the rack, not a catalog.</h2>
+  <ul>
+    <li><strong>Anything on the rack</strong><span>Big try-on tools only work with their own catalog. This works with whatever you're holding.</span></li>
+    <li><strong>Your real body</strong><span>We ask the model to keep your face and body exactly as photographed, and we never apply a filter.</span></li>
+    <li><strong>Never stored</strong><span>Your photos are never stored on our servers. Results stay on your phone for 24 hours unless you save them.</span></li>
+  </ul>
+</div></section>
 
-<!-- beat 3: see it on you -->
-<div class="otr-ph otr-b3" style="display: flex; flex-direction: column; gap: 10px">
-<div style="flex: 1; position: relative; border-radius: 18px; background: #E3DDD4; overflow: hidden; display: flex; align-items: flex-end; justify-content: center">
-<svg width="220" height="300" viewBox="0 0 300 375" aria-hidden="true"><circle cx="150" cy="82" r="36" fill="#C9BFB2"></circle><rect x="136" y="112" width="28" height="26" fill="#C9BFB2"></rect><path d="M92 152 Q150 128 208 152 L230 262 L204 268 L198 375 H102 L96 268 L70 262 Z" fill="#9C948A"></path></svg>
-<div class="otr-reveal" style="position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center">
-<svg width="220" height="300" viewBox="0 0 300 375" aria-hidden="true"><circle cx="150" cy="82" r="36" fill="#C9BFB2"></circle><rect x="136" y="112" width="28" height="26" fill="#C9BFB2"></rect><path d="M84 150 Q150 126 216 150 L244 300 L212 306 L208 375 H92 L88 306 L56 300 Z" fill="#7A2434"></path><path d="M128 140 L150 196 L172 140 L160 375 H140 Z" fill="#E9D7B8"></path><path d="M128 140 L150 196 L172 140" fill="none" stroke="#5C1A27" stroke-width="4"></path></svg>
-</div>
-<div class="otr-scan" style="position: absolute; left: 0; right: 0; top: 0; height: 3px; background: #E9D7B8; box-shadow: 0 0 18px 4px rgba(233,215,184,0.9)"></div>
-</div>
-<span style="font-weight: 700; font-size: 13px; text-align: center; color: #1A1917">You, wearing it</span>
-</div>
+<section id="pricing"><div class="wrap">
+  <span class="eyebrow">Pricing</span>
+  <h2 style="margin-top:10px">Cheaper than a bad buy.</h2>
+  <div class="price">
+    <div class="plan"><span class="eyebrow">Free</span><span class="amt">$0</span><p>3 looks to try it out. Small "AI preview" label on each.</p><a class="btn outline" href="/app">Start free</a></div>
+    <div class="plan dark"><span class="eyebrow" style="color:var(--champagne)">Pack of 20</span><span class="amt">$5.99</span><p>One-time. 20 full-resolution looks, never expire. Use them whenever you like, up to 15 a day.</p><a class="btn light" href="/app?buy=1">Buy the pack</a></div>
+  </div>
+  <p style="margin:18px 0 0;color:var(--stone);font-size:15px;max-width:760px"><strong style="color:var(--ink)">Founding 10:</strong> the first 10 shoppers get a year of unlimited looks for $39 — <a href="mailto:hello@offtherack.app?subject=Founding%2010">email us</a>. Monthly plans come later if you ask for them.</p>
+</div></section>
 
-</div>
-<div style="background: #1A1917; color: #FFFFFF; padding: 14px 16px 12px; font-weight: 600; font-size: 12px; display: flex; flex-direction: column; gap: 10px">
-<div style="display: flex; justify-content: space-between"><span>LOOK 1 OF 3</span><span>FREE</span></div>
-<div style="height: 3px; background: #3A3833; border-radius: 3px; overflow: hidden; display: grid">
-<div class="otr-bar otr-b1" style="grid-area: 1/1; background: #E9D7B8"></div>
-<div class="otr-bar otr-b2" style="grid-area: 1/1; background: #E9D7B8"></div>
-<div class="otr-bar otr-b3" style="grid-area: 1/1; background: #E9D7B8"></div>
-</div>
-</div>
-</div>
-<div class="otr-pulse" style="position: absolute; top: 16px; right: 12px; background: #7A2434; border-radius: 999px; padding: 10px 16px; font-weight: 600; font-size: 13px; letter-spacing: 0.1em; color: #FFFFFF">UNDER 1 MIN</div>
-</div>
-</div>
-</section>
+<section id="safety" class="safety"><div class="wrap">
+  <span class="eyebrow" style="color:var(--champagne)">Safety</span>
+  <h2 style="margin-top:10px">Your photo stays yours.</h2>
+  <ul>
+    <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E9D7B8" stroke-width="2.5"><path d="M5 12l5 5 9-10"/></svg><span><strong>18+ only.</strong> You confirm it's you and that you're 18+ before your first look.</span></li>
+    <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E9D7B8" stroke-width="2.5"><path d="M5 12l5 5 9-10"/></svg><span><strong>Clothes on, always.</strong> Requests to undress or sexualize anyone are blocked before any image is made.</span></li>
+    <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E9D7B8" stroke-width="2.5"><path d="M5 12l5 5 9-10"/></svg><span><strong>Never stored.</strong> Your photos never sit on our servers, and we never build a face or body profile.</span></li>
+    <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E9D7B8" stroke-width="2.5"><path d="M5 12l5 5 9-10"/></svg><span><strong>Report and remove.</strong> Anyone can ask us to take down an image of them, and we remove it within 48 hours.</span></li>
+  </ul>
+</div></section>
 
-<!-- 2 · MARQUEE: where it works -->
-<div style="background: #1A1917; color: #F7F4EF; padding: 18px 0; font-weight: 600; font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; overflow: hidden">
-<div class="otr-track">
-<div style="display: flex; gap: 28px; padding-right: 28px; white-space: nowrap">
-<span>Thrift</span><span aria-hidden="true">/</span><span>Resale</span><span aria-hidden="true">/</span><span>Outlet</span><span aria-hidden="true">/</span><span>Anything on a hanger</span><span aria-hidden="true">/</span><span>Thrift</span><span aria-hidden="true">/</span><span>Resale</span><span aria-hidden="true">/</span><span>Outlet</span><span aria-hidden="true">/</span><span>Anything on a hanger</span><span aria-hidden="true">/</span>
-</div>
-<div class="otr-dup" aria-hidden="true" style="display: flex; gap: 28px; padding-right: 28px; white-space: nowrap">
-<span>Thrift</span><span>/</span><span>Resale</span><span>/</span><span>Outlet</span><span>/</span><span>Anything on a hanger</span><span>/</span><span>Thrift</span><span>/</span><span>Resale</span><span>/</span><span>Outlet</span><span>/</span><span>Anything on a hanger</span><span>/</span>
-</div>
-</div>
-</div>
+<section><div class="wrap faq">
+  <h2>Questions</h2>
+  <div style="margin-top:18px">
+    <details><summary>Do I need to download anything?</summary><p>No. It runs in your phone's browser. To keep it one tap away, tap Share, then Add to Home Screen.</p></details>
+    <details><summary>How accurate is it?</summary><p>It shows how the piece looks and drapes on your body. It can't promise the tag size fits — check the size before you buy.</p></details>
+    <details><summary>What counts as a look?</summary><p>Every image we make for you, including Try again. Cancelling, errors and blocked requests never use one.</p></details>
+    <details><summary>Do my looks expire?</summary><p>Pack looks never expire. Your free looks don't either.</p></details>
+  </div>
+</div></section>
 
-<!-- 3 · HOW IT WORKS: cards light up in sync with the hero phone -->
-<section id="how" style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; display: flex; flex-direction: column; gap: 40px">
-<div class="otr-rv" style="display: flex; flex-direction: column; gap: 12px">
-<span style="font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #6B655E">How it works</span>
-<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(34px, 4vw, 52px); letter-spacing: -0.015em; line-height: 1.08">Three steps, standing in the aisle.</h2>
-</div>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px">
-<div class="otr-card otr-b1" style="background: #FFFFFF; border: 1px solid #E3DDD4; border-radius: 18px; padding: 28px; display: flex; flex-direction: column; gap: 14px">
-<span class="otr-badge otr-b1" style="font-weight: 700; font-size: 14px; background: #1A1917; color: #FFFFFF; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 999px">01</span>
-<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 26px">Snap yourself</h3>
-<p style="margin: 0; font-size: 16px; line-height: 1.55; color: #6B655E">One full-body photo. Busy store backgrounds are fine — your photo is never stored on our servers.</p>
-</div>
-<div class="otr-card otr-b2" style="background: #FFFFFF; border: 1px solid #E3DDD4; border-radius: 18px; padding: 28px; display: flex; flex-direction: column; gap: 14px">
-<span class="otr-badge otr-b2" style="font-weight: 700; font-size: 14px; background: #1A1917; color: #FFFFFF; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 999px">02</span>
-<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 26px">Snap the hanger</h3>
-<p style="margin: 0; font-size: 16px; line-height: 1.55; color: #6B655E">On the rack, on a hanger, flat on a table. Add a top and jeans together and see the full outfit at once.</p>
-</div>
-<div class="otr-card otr-b3" style="background: #FFFFFF; border: 1px solid #E3DDD4; border-radius: 18px; padding: 28px; display: flex; flex-direction: column; gap: 14px">
-<span class="otr-badge otr-b3" style="font-weight: 700; font-size: 14px; background: #1A1917; color: #FFFFFF; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 999px">03</span>
-<h3 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 26px">See it on you</h3>
-<p style="margin: 0; font-size: 16px; line-height: 1.55; color: #6B655E">Your body, your shape, as photographed. Save it, try again, or share it with a friend before you buy.</p>
-</div>
-</div>
-</section>
-
-<!-- 5 · WHY: cards rise in on scroll -->
-<section style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; display: flex; flex-direction: column; gap: 40px">
-<div class="otr-rv" style="display: flex; flex-direction: column; gap: 12px">
-<span style="font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #6B655E">Why it's different</span>
-<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(34px, 4vw, 52px); letter-spacing: -0.015em; line-height: 1.08">Built for the rack, not a catalog.</h2>
-</div>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px">
-<div class="otr-rv otr-lift" style="background: #FFFFFF; border: 1px solid #E3DDD4; border-radius: 16px; padding: 24px; display: flex; gap: 14px; align-items: flex-start">
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7A2434" stroke-width="2" aria-hidden="true" style="flex: none; margin-top: 2px"><path d="M3 12 L12 3 H21 V12 L12 21 Z"></path></svg>
-<div style="display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 18px">Anything on the rack</strong><span style="font-size: 15px; line-height: 1.5; color: #6B655E">Big try-on tools only work with their own catalog. This works with whatever you're holding.</span></div>
-</div>
-<div class="otr-rv otr-lift" style="background: #FFFFFF; border: 1px solid #E3DDD4; border-radius: 16px; padding: 24px; display: flex; gap: 14px; align-items: flex-start">
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7A2434" stroke-width="2" aria-hidden="true" style="flex: none; margin-top: 2px"><circle cx="12" cy="7" r="4"></circle><path d="M4 21c1-4 4-6 8-6s7 2 8 6"></path></svg>
-<div style="display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 18px">Your real body</strong><span style="font-size: 15px; line-height: 1.5; color: #6B655E">We ask the model to keep your face and body exactly as photographed, and we never apply a filter. What you see is your shape.</span></div>
-</div>
-<div class="otr-rv otr-lift" style="background: #FFFFFF; border: 1px solid #E3DDD4; border-radius: 16px; padding: 24px; display: flex; gap: 14px; align-items: flex-start">
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7A2434" stroke-width="2" aria-hidden="true" style="flex: none; margin-top: 2px"><path d="M8 3 L4 7 V20 H20 V7 L16 3 C15 5 9 5 8 3 Z"></path></svg>
-<div style="display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 18px">The whole outfit at once</strong><span style="font-size: 15px; line-height: 1.5; color: #6B655E">Top, bottom and jacket together — not one piece at a time.</span></div>
-</div>
-<div class="otr-rv otr-lift" style="background: #FFFFFF; border: 1px solid #E3DDD4; border-radius: 16px; padding: 24px; display: flex; gap: 14px; align-items: flex-start">
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7A2434" stroke-width="2" aria-hidden="true" style="flex: none; margin-top: 2px"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
-<div style="display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 18px">Never stored</strong><span style="font-size: 15px; line-height: 1.5; color: #6B655E">Your photos are never stored on our servers. Results stay on your phone for 24 hours unless you save them.</span></div>
-</div>
-</div>
-</section>
-
-<!-- 6 · PRICING: rise in, hover lift, pulsing "most picked" -->
-<section id="pricing" style="background: #EFEAE3">
-<div style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; display: flex; flex-direction: column; gap: 40px">
-<div class="otr-rv" style="display: flex; flex-direction: column; gap: 12px">
-<span style="font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #6B655E">Pricing</span>
-<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(34px, 4vw, 52px); letter-spacing: -0.015em; line-height: 1.08">Cheaper than a bad buy.</h2>
-</div>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; align-items: stretch; max-width: 820px">
-<div class="otr-rv otr-lift" style="border: 1px solid #E3DDD4; border-radius: 18px; padding: 26px; display: flex; flex-direction: column; gap: 12px; background: #FFFFFF">
-<span style="font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em">Free</span>
-<span style="font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 44px">$0</span>
-<span style="font-size: 15px; color: #6B655E; line-height: 1.5">3 looks to try it out. Small "AI preview" label on each.</span>
-<a href="/app" style="margin-top: auto; text-align: center; border: 1px solid #1A1917; color: #1A1917; text-decoration: none; padding: 12px; border-radius: 999px; font-weight: 700">Start free</a>
-</div>
-<div class="otr-rv otr-lift" style="border: 1px solid #E3DDD4; border-radius: 18px; padding: 26px; display: flex; flex-direction: column; gap: 12px; background: #FFFFFF">
-<span style="font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em">Pack of 20</span>
-<span style="font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 44px">$5.99</span>
-<span style="font-size: 15px; color: #6B655E; line-height: 1.5">One-time. 20 full-resolution looks, never expire. Use them whenever you like, up to 15 a day.</span>
-<a href="/app?buy=1" style="margin-top: auto; text-align: center; border: 1px solid #1A1917; color: #1A1917; text-decoration: none; padding: 12px; border-radius: 999px; font-weight: 700">Buy the pack</a>
-</div>
-</div>
-<p class="otr-rv" style="margin: 0; font-size: 15px; color: #6B655E"><strong style="color: #1A1917">Founding 10:</strong> the first 10 shoppers get a year of unlimited looks for $39 — <a href="mailto:hello@offtherack.app?subject=Founding%2010" style="color: #7A2434">email us</a>. Monthly plans come later if you ask for them.</p>
-</div>
-</section>
-
-<!-- 7 · SAFETY: checkmarks draw themselves as each rule scrolls in -->
-<section id="safety" style="background: #1A1917; color: #F7F4EF">
-<div style="max-width: 1200px; margin: 0 auto; padding: 96px 24px; display: flex; flex-wrap: wrap; gap: 48px">
-<div class="otr-rv" style="flex: 1 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
-<span style="font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #E9D7B8">Safety</span>
-<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(34px, 4vw, 52px); letter-spacing: -0.015em; line-height: 1.08">Your photo stays yours.</h2>
-<p style="margin: 0; font-size: 17px; line-height: 1.55; color: #D9D2C8">A try-on app handles the most personal photo you own. These rules are built in, not bolted on.</p>
-</div>
-<ul style="flex: 1 1 480px; min-width: 0; margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; font-size: 16px; line-height: 1.5">
-<li class="otr-rv" style="display: flex; gap: 12px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E9D7B8" stroke-width="2.5" aria-hidden="true" style="flex: none; margin-top: 3px"><path class="otr-check" d="M5 12l5 5 9-10"></path></svg><span><strong>18+ only.</strong> You confirm it's you and that you're 18+ before your first look.</span></li>
-<li class="otr-rv" style="display: flex; gap: 12px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E9D7B8" stroke-width="2.5" aria-hidden="true" style="flex: none; margin-top: 3px"><path class="otr-check" d="M5 12l5 5 9-10"></path></svg><span><strong>Clothes on, always.</strong> Requests to undress or sexualize anyone are blocked.</span></li>
-<li class="otr-rv" style="display: flex; gap: 12px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E9D7B8" stroke-width="2.5" aria-hidden="true" style="flex: none; margin-top: 3px"><path class="otr-check" d="M5 12l5 5 9-10"></path></svg><span><strong>Never stored.</strong> Your photos never sit on our servers, and we never build a face or body profile.</span></li>
-<li class="otr-rv" style="display: flex; gap: 12px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E9D7B8" stroke-width="2.5" aria-hidden="true" style="flex: none; margin-top: 3px"><path class="otr-check" d="M5 12l5 5 9-10"></path></svg><span><strong>Report and remove.</strong> Anyone can ask us to take down an image of them, and we remove it within 48 hours.</span></li>
-</ul>
-</div>
-</section>
-
-<!-- 8 · CTA: a hanger that sways -->
-<section id="start-cta" style="padding: 96px 24px">
-<div class="otr-rv" style="max-width: 1152px; margin: 0 auto; background: #7A2434; color: #F7F4EF; border-radius: 28px; padding: 56px 32px; display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; box-shadow: 0 20px 50px rgba(26,25,23,0.16)">
-<svg class="otr-bob" width="72" height="56" viewBox="0 0 72 56" fill="none" stroke="#E9D7B8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M36 6 a6 6 0 1 1 6 6 c-3 0-6 2-6 5 v4"></path><path d="M36 21 L4 46 H68 Z"></path></svg>
-<h2 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(34px, 4.5vw, 58px); letter-spacing: -0.015em; line-height: 1">Next time you're at the rack, try it on here first.</h2>
-<a href="/app" class="otr-lift" style="background: #E9D7B8; color: #1A1917; text-decoration: none; padding: 16px 28px; border-radius: 999px; font-weight: 700; font-size: 17px">Try 3 looks free</a>
-<span style="font-weight: 600; font-size: 13px">Works on iPhone and Android · No app store download needed</span>
-</div>
-</section>
+<section style="padding-top:0"><div class="wrap"><div class="final">
+  <h2>Next time you're at the rack, try it on here first.</h2>
+  <a class="btn light big" href="/app">Try 3 looks free</a>
+  <span style="font-weight:600;font-size:13px">Works on iPhone and Android · No app store download needed</span>
+</div></div></section>
 </main>
 
-<footer style="border-top: 1px solid #E3DDD4">
-<div style="max-width: 1200px; margin: 0 auto; padding: 28px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 14px; color: #6B655E">
-<span>© 2026 Off the Rack · offtherack.app</span>
-<div style="display: flex; flex-wrap: wrap; gap: 20px">
-<a href="/report.html" style="min-height: 44px; display: inline-flex; align-items: center">Report a photo</a><a href="/privacy.html" style="min-height: 44px; display: inline-flex; align-items: center">Privacy</a><a href="/terms.html" style="min-height: 44px; display: inline-flex; align-items: center">Terms</a>
-</div>
-</div>
-</footer>
-</div>
+<footer class="wrap"><span>© 2026 Off the Rack · offtherack.app</span><div><a href="/report.html">Report a photo</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a></div></footer>
+<div class="sticky" id="sticky"><a class="btn" href="/app">Try 3 looks free</a></div>
+
 <script>
-(function(){
-  var r=document.getElementById('otr-split'),a=document.getElementById('otr-after'),h=document.getElementById('otr-handle');
-  if(!r||!a||!h)return;
-  function set(){var p=r.value+'%';a.style.clipPath='inset(0 0 0 '+p+')';h.style.left=p;}
-  r.addEventListener('input',set);set();
-})();
+document.getElementById('cut').oninput=e=>document.getElementById('cmp').style.setProperty('--cut',e.target.value+'%');
+// sticky CTA appears once the hero CTA scrolls away (mobile only)
+const heroBtn=document.querySelector('.hero .btn.big'); if('IntersectionObserver' in window){ new IntersectionObserver(([en])=>document.getElementById('sticky').classList.toggle('on',!en.isIntersecting&&innerWidth<860)).observe(heroBtn); }
+document.querySelectorAll('a[href^="/app"]').forEach((a,i)=>a.addEventListener('click',()=>otr('cta_click',{label:a.textContent.trim(),index:i})));
+document.querySelectorAll('a[href^="mailto:"]').forEach(a=>a.addEventListener('click',()=>otr('founding_click',{where:'landing'})));
 </script>
-<script>document.querySelectorAll('a[href="/app"]').forEach((a,i)=>a.addEventListener('click',()=>otr('cta_click',{label:a.textContent.trim(),index:i})));document.querySelectorAll('a[href^="mailto:"]').forEach(a=>a.addEventListener('click',()=>otr('founding_click',{where:'landing'})));</script>
 </body>
 </html>
