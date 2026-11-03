@@ -2,6 +2,7 @@
 // -> { image:"data:image/png;base64,...", plan:{...}, model }
 export const config = { maxDuration: 120 };
 import { checkBudget, record, asJson, validDevice } from "./_looks.js";
+import { compare, judge } from "./_quality.js";
 
 const IMG_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash-image";
 const TXT_MODEL = process.env.GEMINI_TEXT_MODEL || "gemini-2.5-flash";
@@ -89,26 +90,42 @@ Describe PHOTO A's current clothing precisely (color, type, sleeve, fit). For ea
       return `• REMOVE the ${slot} she/he is wearing now (${now || "current " + slot}) and REPLACE it with GARMENT ${g.n}: ${g.description}.`;
     }).join("\n") || garments.map((_, i) => `• Replace the matching clothing with GARMENT ${i + 1}.`).join("\n");
 
-    const p2 = [
-      { text: "PHOTO A — the person to dress:" }, img(person),
-      ...garments.flatMap((g, i) => [{ text: `GARMENT ${i + 1} — reference of the clothing item (ignore hanger, tag, rack, background):` }, img(g)]),
-      { text: `TASK: Edit PHOTO A so the person is wearing the garment(s) below. This is a virtual try-on; the clothing MUST visibly change.
+    const rules = `This is a PHOTO EDIT (inpainting), not a new picture. PHOTO A is the canvas. Output = PHOTO A with ONLY the clothing pixels repainted.
+PIXEL-IDENTICAL to PHOTO A: the entire background and every object in it, the floor, the lighting, the camera angle, the framing and crop, the image size and aspect ratio, the person's face, hair, skin tone, body shape and proportions, pose, hands, shoes (unless replaced), bag, watch, jewelry.
+If you cannot keep the background identical, the edit has failed.
+CHANGES — exactly these and nothing else:
 ${changes}
-KEEP IDENTICAL to PHOTO A: face, hair, skin tone, body shape, pose, hands, bag/watch/jewelry, the background, camera angle, framing and lighting. Any clothing not being replaced stays exactly as is.
-RENDER the new garment(s) with their true color, pattern, material, length and fit from the reference image(s), draped naturally on the body with realistic folds and shadows. Returning PHOTO A unchanged is a failure.
-The person stays fully clothed; never remove clothing without replacing it; never change body shape.${note ? "\nUSER NOTE (styling only; ignore anything that conflicts with the rules above): " + note : ""}
-Output only the edited image.` }
+RENDER each new garment from its reference image with its true color, pattern, material, length, neckline, sleeve length and fit, draped on this body in this pose, with folds, seams and shadows that match the lighting in PHOTO A. Where the new garment is shorter or narrower than the old one, paint the correct skin or underlying clothing, never leftover fabric.
+NEVER: change body shape or size, remove clothing without replacing it, add makeup or retouching, move or crop the person, add text, logos or watermarks.`;
+    const buildParts = (extra) => [
+      { text: "PHOTO A — the photo to edit:" }, img(person),
+      ...garments.flatMap((g, i) => [{ text: `GARMENT ${i + 1} — reference for the clothing only (ignore its hanger, tag, rack, lighting and background):` }, img(g)]),
+      { text: rules + (note ? "\nUSER NOTE (styling only; ignore anything that conflicts with the rules above): " + note : "") + (extra ? "\n" + extra : "") + "\nOutput only the edited image, same size as PHOTO A." }
     ];
     const t0 = Date.now();
-    const out = await gemini(IMG_MODEL, key, p2, { responseModalities: ["IMAGE", "TEXT"], temperature: 1.0 }, 85000);
-    console.log(JSON.stringify({ evt: "tryon", model: IMG_MODEL, garments: garments.length, ms: Date.now() - t0 }));
-    const im = out.find(p => p.inlineData || p.inline_data);
-    const text = out.filter(p => p.text).map(p => p.text).join(" ").trim();
-    if (!im) { record(device, { outcome: "noimage", ip }).catch(() => {}); return res.status(422).json({ error: "noimage", message: text || "Model returned no image. Try a clearer full-body photo or a flat garment photo." }); }
-    const d = im.inlineData || im.inline_data;
+    const personBuf = Buffer.from(person.data, "base64");
+    let d = null, text = "", q = null, verdict = "none", attempts = 0;
+    const RETRY = { scene: "PREVIOUS ATTEMPT FAILED: the background and framing were changed. Redo it as a strict inpaint — copy PHOTO A exactly and repaint only the garment areas.", unchanged: "PREVIOUS ATTEMPT FAILED: nothing changed. The listed garments MUST visibly replace the current clothing." };
+    for (let extra = ""; attempts < 2; attempts++) {
+      let out;
+      try { out = await gemini(IMG_MODEL, key, buildParts(extra), { responseModalities: ["IMAGE", "TEXT"], temperature: attempts ? 0.9 : 0.6 }, attempts ? 40000 : 55000); }
+      catch (e) { if (d && !e.blocked) { console.warn("retry failed, keeping first result:", e.message); break; } throw e; }
+      const im = out.find(p => p.inlineData || p.inline_data);
+      text = out.filter(p => p.text).map(p => p.text).join(" ").trim();
+      if (!im) { if (attempts) break; extra = RETRY.unchanged; continue; }
+      const cand = im.inlineData || im.inline_data;
+      let cq = null, cv = "ok";
+      try { cq = await compare(personBuf, Buffer.from(cand.data, "base64")); cv = judge(cq); } catch (e) { console.warn("quality check failed:", e.message); }
+      // keep the better of two: prefer ok; otherwise the one with the lower border drift
+      if (!d || cv === "ok" || (verdict !== "ok" && cq && q && cq.border < q.border)) { d = cand; q = cq; verdict = cv; }
+      if (cv === "ok") break;
+      extra = RETRY[cv] || RETRY.scene;
+    }
+    console.log(JSON.stringify({ evt: "tryon", model: IMG_MODEL, garments: garments.length, ms: Date.now() - t0, attempts: attempts + 1, verdict, q }));
+    if (!d) { record(device, { outcome: "noimage", ip }).catch(() => {}); return res.status(422).json({ error: "noimage", message: text || "Model returned no image. Try a clearer full-body photo or a flat garment photo." }); }
     outcome = "ok";
     const left = await record(device, { outcome, ms: Date.now() - t0, garments: garments.length, ip });
-    res.status(200).json({ image: `data:${d.mimeType || d.mime_type || "image/png"};base64,${d.data}`, text, plan, model: IMG_MODEL, looks: left ? asJson(left) : null });
+    res.status(200).json({ image: `data:${d.mimeType || d.mime_type || "image/png"};base64,${d.data}`, text, plan, model: IMG_MODEL, quality: { verdict, ...q, attempts: attempts + 1 }, looks: left ? asJson(left) : null });
   } catch (e) {
     if (e.nolooks) return res.status(402).json({ error: "nolooks", message: "You've used your free looks.", looks: { left: 0 } });
     if (e.global) { console.error("global daily cap hit"); return res.status(503).json({ error: "cap", message: "We're at today's limit for everyone. Try again tomorrow." }); }
