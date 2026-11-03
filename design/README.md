@@ -26,7 +26,7 @@ Free 3 → Founding 10 (a year unlimited for $39, by email — the only paid pat
 
 ## Alternatives considered
 
-- **Single-scroll page (what shipped first).** Both steps visible at once, result appended below. Rejected for launch: on a 390 px screen the primary button is below the fold until both cards are filled, the consent box has no natural home, and there is nowhere to put the looks counter. Kept as the `public/index.html` layout until the wizard rebuild lands; the restyle brings it onto the Atelier tokens so the two stop looking like different products.
+- **Single-scroll page (what shipped first, Oct 30 – Nov 2).** Both steps visible at once, result appended below. Replaced by the three-screen wizard on Nov 2 (`public/app/index.html`): one job per screen, progress bar, looks pill, Working overlay, inline Error/Blocked/NoLooks states, back navigation, session restore lands on the step you were on.
 - **Camera-first (open on the viewfinder).** Fastest in the aisle, but the user has to understand consent and "snap yourself, not the rack" before the first shutter. Rejected until there is a returning-user mode that can skip Step 1.
 - **Clothes first, then you.** Matches the moment (she is holding the hanger). Rejected because the person photo is the one that needs the 18+ gate, and asking for it second buries the gate.
 
