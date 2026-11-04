@@ -32,6 +32,7 @@
   @media(min-width:760px){nav .links{display:flex}}
   /* hero */
   .hero{padding:36px 0 28px;display:grid;gap:28px}
+  @media(max-width:859px){.hero>div:first-child{display:contents}.hero .tag,.hero h1,.hero p.lead{order:0}.hero>div:last-child{order:1}.hero .cta{order:2}.hero .fine{order:3;margin-top:0}}
   @media(min-width:860px){.hero{grid-template-columns:1.1fr .9fr;align-items:center;gap:56px;padding:72px 0 64px}}
   .hero .tag{display:inline-flex;align-self:flex-start;background:var(--champagne);border-radius:999px;padding:8px 14px}
   .hero p.lead{font-size:clamp(17px,4.3vw,21px);color:var(--stone);margin:14px 0 22px;max-width:540px}
@@ -97,18 +98,18 @@ window.otr=(e,p)=>{try{posthog.capture('otr_'+e,p||{})}catch{}};
     <h1 style="margin-top:14px">See it on you before the fitting-room line.</h1>
     <p class="lead">Snap the hanger. Snap yourself. See the whole outfit on your real body in under a minute. Any rack, any store — thrift, resale, outlet.</p>
     <div class="cta"><a class="btn big" href="/app">Try 3 looks free</a><a href="#how" style="font-weight:700;padding:14px 8px;text-decoration:underline">How it works</a></div>
-    <p class="fine">No card to start · Never stored on our servers · 18+ · No app download</p>
+    <p class="fine">No card to start · Never stored on our servers · No app download</p>
   </div>
   <div>
-    <div class="cmp" id="cmp" style="--cut:55%">
+    <div class="cmp" id="cmp" style="--cut:34%">
       <img src="/img/demo-before.jpg" alt="Shopper in a thrift-store aisle wearing a grey tee and jeans, before" width="900" height="1200" fetchpriority="high">
-      <img class="after" src="/img/demo-after.jpg" alt="The same shopper wearing the sweater and jeans from the rack" width="900" height="1200">
+      <img class="after" src="/img/demo-after.jpg" alt="The same shopper wearing the black slip dress from the rack" width="900" height="1200">
       <div class="bar"></div><div class="knob" aria-hidden="true">⇔</div>
       <span class="tag" style="left:14px">BEFORE</span><span class="tag" style="right:14px">AFTER</span>
       <span class="time">UNDER 1 MIN</span><span class="ai">AI-generated preview</span>
-      <input type="range" id="cut" min="0" max="100" value="55" aria-label="Drag to compare before and after">
+      <input type="range" id="cut" min="0" max="100" value="34" aria-label="Drag to compare before and after">
     </div>
-    <p class="cap">Drag to compare · AI-generated shopper, real hanger photos, nothing retouched but the clothes</p>
+    <p class="cap">Drag to compare · The demo shopper is an AI model — we never keep or show real customers' photos. Your try-on uses your own photo.</p>
   </div>
 </div></div>
 
@@ -172,7 +173,7 @@ window.otr=(e,p)=>{try{posthog.capture('otr_'+e,p||{})}catch{}};
 </div></div></section>
 </main>
 
-<footer class="wrap"><span>© 2026 Off the Rack · offtherack.app</span><div><a href="/report.html">Report a photo</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a></div></footer>
+<footer class="wrap"><span>© 2026 Off the Rack · offtherack.app · 18+</span><div><a href="/report.html">Report a photo</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a></div></footer>
 <div class="sticky" id="sticky"><a class="btn" href="/app">Try 3 looks free</a></div>
 
 <script>
