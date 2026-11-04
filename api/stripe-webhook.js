@@ -1,6 +1,6 @@
 // POST /api/stripe-webhook — checkout.session.completed → credit the device. Idempotent on session id.
-import Stripe from "stripe";
 import { sql, validDevice, getDevice } from "./_looks.js";
+import { stripeConfig } from "./_stripe.js";
 
 export const config = { api: { bodyParser: false } };
 
@@ -8,11 +8,11 @@ const rawBody = (req) => new Promise((res, rej) => { const c = []; req.on("data"
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
-  const key = process.env.STRIPE_SECRET_KEY, whsec = process.env.STRIPE_WEBHOOK_SECRET;
-  if (!key || !whsec || !sql) return res.status(503).json({ error: "setup" });
-  const stripe = new Stripe(key);
+  let cfg = null; try { cfg = await stripeConfig(); } catch (e) { console.error("stripe bootstrap failed:", e.message); }
+  if (!cfg || !cfg.whsec || !sql) return res.status(503).json({ error: "setup" });
+  const stripe = cfg.stripe;
   let event;
-  try { event = stripe.webhooks.constructEvent(await rawBody(req), req.headers["stripe-signature"], whsec); }
+  try { event = stripe.webhooks.constructEvent(await rawBody(req), req.headers["stripe-signature"], cfg.whsec); }
   catch (e) { console.warn("bad signature:", e.message); return res.status(400).json({ error: "signature" }); }
   if (event.type !== "checkout.session.completed") return res.status(200).json({ ignored: event.type });
 
