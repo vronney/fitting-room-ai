@@ -32,8 +32,9 @@ Dresses people, never undresses them. 18+ and consent attestation, input + outpu
 ## Payments (Stripe, test mode)
 - `api/checkout.js` — Stripe-hosted Checkout for the $5.99 Pack of 20 (`STRIPE_PRICE_PACK`), `client_reference_id` = device id
 - `api/stripe-webhook.js` — `checkout.session.completed` → `paid_left += 20` (pack) or `unlimited_until + 365 d` (Founding 10 Payment Link, device code from the custom field); idempotent on session id; unmatched devices logged to `payments` for hand fixing
-- Env: `STRIPE_SECRET_KEY` (sk_test_…), `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_PACK`, `STRIPE_PRICE_FOUNDING`, `FOUNDING_PAYMENT_LINK`, `APP_URL`
-- Go live: flip the account to live mode, recreate products/price/payment link/webhook there, swap the five env values.
+- `api/_stripe.js` — self-provisioning: on first use it creates the product + price (lookup keys `otr_pack_20`, `otr_founding_10`), the Founding 10 Payment Link and the webhook endpoint **in whatever account `STRIPE_SECRET_KEY` belongs to**, and caches ids + the webhook secret in Neon `settings`
+- Env: only `STRIPE_SECRET_KEY` and `APP_URL` are required. `STRIPE_WEBHOOK_SECRET` / `STRIPE_PRICE_*` / `FOUNDING_PAYMENT_LINK` are optional overrides.
+- Go live: swap `STRIPE_SECRET_KEY` for the live key and redeploy; the bootstrap creates everything again in live mode.
 
 ## Founding 10 (manual fallback)
 A customer emails from the app; the mail body carries their device id. Grant a year:
